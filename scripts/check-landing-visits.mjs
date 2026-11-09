@@ -63,7 +63,19 @@ await check("theConnectBridgeIsNotALanding", () => {
 })
 
 await check("tokenPagesAreNeverCounted", () => {
-  for (const path of ["/reset-password/abc", "/reset-password/abc?x=1", "/verify-email/xyz", "/unsubscribe?t=1", "/unsubscribe"]) assert.equal(visitOf(path), null, path)
+  for (const path of ["/reset-password/abc", "/reset-password/abc?x=1", "/verify-email/xyz", "/unsubscribe?t=1", "/unsubscribe", "/unsubscribe/", "/offline/"]) assert.equal(visitOf(path), null, path)
+})
+
+await check("prefetchesAndPrerendersAreNotCounted", () => {
+  const prefetch = (value, name = "sec-purpose") => {
+    const request = requestOf("/")
+    request.headers.set(name, value)
+    return landingVisitOf(request, page())
+  }
+  assert.equal(prefetch("prefetch"), null)
+  assert.equal(prefetch("prefetch;prerender"), null)
+  assert.equal(prefetch("prefetch", "purpose"), null)
+  assert.notEqual(prefetch("navigate", "x-other"), null)
 })
 
 await check("theQueryIsAlwaysDropped", () => {

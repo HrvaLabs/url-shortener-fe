@@ -43,8 +43,9 @@ const refererHostOf = (request: Request): string | null => {
   }
 }
 
-const pageOf = (pathname: string): string => {
-  const path = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname
+const withoutTrailingSlash = (pathname: string) => (pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname)
+
+const pageOf = (path: string): string => {
   if (path === "/") return path
   const segments = path.slice(1).split("/")
   const [first, second] = segments
@@ -59,10 +60,12 @@ export const landingVisitOf = (request: Request, response: Response): LandingVis
   if (request.method !== "GET" || request.headers.get("sec-fetch-dest") !== "document" || url.hostname !== APP_HOST) return null
   if ((request as { cf?: { verifiedBotCategory?: string } }).cf?.verifiedBotCategory) return null
   if (response.status < 200 || response.status > 299 || isJunkPath(url.pathname)) return null
-  if (NOT_COUNTED.test(url.pathname)) return null
+  if (request.headers.has("sec-purpose") || request.headers.get("purpose")?.toLowerCase() === "prefetch") return null
+  const path = withoutTrailingSlash(url.pathname)
+  if (NOT_COUNTED.test(path)) return null
   const refererHost = refererHostOf(request)
   if (refererHost && isOwnHost(refererHost)) return null
-  const page = pageOf(url.pathname)
+  const page = pageOf(path)
   const utmSource = url.searchParams.get("utm_source")
   if (utmSource) {
     const source = utmSource.toLowerCase()
