@@ -89,7 +89,7 @@ export default function PrivacyPage() {
                 directory, or something else) or skip. It is optional, and skipping changes nothing
                 about your account. The answer, or the fact that you skipped, is stored with your
                 account so the question is not asked again, and it is deleted with your account. The
-                admin sees only how many accounts gave each answer, not who gave which.
+                admin statistics show only how many accounts gave each answer.
               </p>
               <p>
                 Legal basis: your consent (Art. 6(1)(a) GDPR). The answer is optional. To withdraw it,

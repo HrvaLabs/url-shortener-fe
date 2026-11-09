@@ -20,7 +20,7 @@ export const SIGNUP_SOURCE_LABELS: Record<SignupChoice, string> = {
 }
 
 export const SIGNUP_SOURCE_QUESTION = "How did you find hrva.cc?"
-export const SIGNUP_SOURCE_NOTE = "Optional. The admin sees only counts per answer, not who answered what."
+export const SIGNUP_SOURCE_NOTE = "Optional. The admin statistics show only how many accounts gave each answer."
 export const SIGNUP_SOURCE_PICK_FIRST = "Pick an answer, or skip."
 export const SIGNUP_SOURCE_FAILED = "Couldn't save your answer. Try again, or skip."
 

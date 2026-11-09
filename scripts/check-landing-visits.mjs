@@ -149,8 +149,16 @@ await check("aFailingDatasetNeverBreaksTheResponse", () => {
       throw new Error("boom")
     },
   }
-  assert.doesNotThrow(() => writeLandingVisit(dataset, { source: "direct", kind: "direct", page: "/" }))
-  assert.doesNotThrow(() => writeLandingVisit({}, { source: "direct", kind: "direct", page: "/" }))
+  const warn = console.warn
+  const warnings = []
+  console.warn = (...args) => warnings.push(args)
+  try {
+    assert.doesNotThrow(() => writeLandingVisit(dataset, { source: "direct", kind: "direct", page: "/" }))
+    assert.doesNotThrow(() => writeLandingVisit({}, { source: "direct", kind: "direct", page: "/" }))
+  } finally {
+    console.warn = warn
+  }
+  assert.equal(warnings.length, 2)
 })
 
 await check("theDataPointHasTheAgreedShape", () => {
