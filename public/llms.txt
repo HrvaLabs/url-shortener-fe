@@ -36,7 +36,7 @@ Shortening works without an account. A free account adds custom aliases, editing
 - [Notifications and webhooks](https://app.hrva.cc/help/notifications): opt-in emails (dead links, weekly summary, expiry reminders) and alerts to Discord, Slack, Telegram, ntfy or a signed webhook. Everything is off until you turn it on
 - [Free URL shortener for your own domain](https://app.hrva.cc/custom-domain-url-shortener): short links on your own subdomain, like go.example.com/menu; what setup takes and the limits
 - [Bitly alternative](https://app.hrva.cc/compare/bitly-alternative): how hrva.cc compares with Bitly's Free plan on links, aliases, QR codes, bio pages, the API and what is stored about clicks, with Bitly's pages as sources
-- [Free custom domain shorteners compared](https://app.hrva.cc/compare/free-custom-domain-shorteners): what the free plans of hrva.cc, Dub, Short.io, Bitly and Rebrandly include for custom domains, links, click tracking, ads and open source, read from each vendor's pricing page
+- [Free custom domain shorteners compared](https://app.hrva.cc/compare/free-custom-domain-shorteners): what hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly include for custom domains, links, click tracking, ads and open source, read from each vendor's pricing page
 - [Custom short links](https://app.hrva.cc/custom-short-links): check whether hrva.cc/your-name is free, and the rules for names
 - [Custom domains](https://app.hrva.cc/help/custom-domains): short links on your own subdomain, like go.example.com; free, reviewed by a person, then set up after one CNAME record
 - [How to read the public stats](https://app.hrva.cc/help/stats): what the public numbers mean, and how QR scans are counted

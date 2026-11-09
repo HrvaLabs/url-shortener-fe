@@ -91,7 +91,7 @@ export default function CustomDomainUrlShortenerPage() {
           <Link href="/help/custom-domains">the custom domains guide</Link>.
         </p>
         <p>
-          How the free plans of hrva.cc, Dub, Short.io, Bitly and Rebrandly compare on custom domains is in{" "}
+          How hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly compare on custom domains is in{" "}
           <Link href="/compare/free-custom-domain-shorteners">the free custom domain comparison</Link>.
         </p>
 
