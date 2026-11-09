@@ -1,6 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { JSON_LD_IDS, JsonLdScript, pageBreadcrumbs, reference } from "@/components/json-ld"
+import { VerdictCell, type Verdict } from "@/components/compare/verdict-cell"
 import { StaticPage } from "@/components/static-page"
 import { Button } from "@/components/ui/button"
 import { BITLY_COMPARISON } from "@/lib/comparisons"
@@ -37,68 +38,86 @@ const comparisonJsonLd = {
 
 type Source = keyof typeof sources
 
+interface Cell {
+  verdict: Verdict
+  note?: string
+}
+
 interface Row {
   feature: string
-  hrva: string
-  bitly: string
+  hrva: Cell
+  bitly: Cell
   source: Source
 }
 
 const rows: Row[] = [
   {
-    feature: "Price",
-    hrva: "Free. There are no paid plans.",
-    bitly: "$0 on the Free plan. Paid plans start at $10 a month, billed annually ($120 a year).",
-    source: "pricing",
-  },
-  { feature: "Ads", hrva: "None.", bitly: "The Free plan is listed as \"With Ads\".", source: "pricing" },
-  {
-    feature: "Short links",
-    hrva: "No monthly cap. Creating links is rate-limited per hour.",
-    bitly: "5 links a month on the Free plan.",
+    feature: "No paid plan needed",
+    hrva: { verdict: "yes", note: "Free. There are no paid plans." },
+    bitly: { verdict: "no", note: "Free plan at $0. Paid plans start at $10 a month, billed annually ($120 a year)." },
     source: "pricing",
   },
   {
-    feature: "Custom aliases",
-    hrva: "Yes, with a free account, with no monthly cap.",
-    bitly: "3 custom back-halves a month on the Free plan.",
+    feature: "No ads",
+    hrva: { verdict: "yes" },
+    bitly: { verdict: "no", note: "The Free plan is listed as \"With Ads\"." },
     source: "pricing",
   },
   {
-    feature: "QR codes",
-    hrva: "A QR code for every link, as PNG or SVG, and a QR code generator that needs no account.",
-    bitly: "2 QR codes a month on the Free plan.",
+    feature: "Short links without a monthly cap",
+    hrva: { verdict: "yes", note: "Creating links is rate-limited per hour." },
+    bitly: { verdict: "no", note: "5 links a month on the Free plan." },
     source: "pricing",
   },
   {
-    feature: "Link in bio",
-    hrva: "One bio page per account, with up to 30 buttons.",
-    bitly: "2 custom landing pages on the Free plan.",
+    feature: "Custom aliases without a monthly cap",
+    hrva: { verdict: "yes", note: "With a free account." },
+    bitly: { verdict: "no", note: "3 custom back-halves a month on the Free plan." },
     source: "pricing",
   },
   {
-    feature: "API",
-    hrva: "Free. Each key can make 600 requests an hour by default, and your API keys page shows how many it has made.",
-    bitly: "1,000 API requests a month on the Free plan.",
+    feature: "QR codes without a monthly cap",
+    hrva: { verdict: "yes", note: "A QR code for every link, as PNG or SVG, and a QR code generator that needs no account." },
+    bitly: { verdict: "no", note: "2 QR codes a month on the Free plan." },
     source: "pricing",
   },
   {
-    feature: "What is stored when someone clicks",
-    hrva: "Daily totals per link. No IP addresses, and nothing about a single click.",
-    bitly:
-      "Its privacy policy lists: the IP address and the location derived from it, referring websites, the time and date of each access, device settings such as browser, operating system and language, cookies and mobile advertising identifiers.",
+    feature: "Link in bio on the free plan",
+    hrva: { verdict: "yes", note: "One bio page per account, with up to 30 buttons." },
+    bitly: { verdict: "yes", note: "2 custom landing pages." },
+    source: "pricing",
+  },
+  {
+    feature: "API on the free plan",
+    hrva: {
+      verdict: "yes",
+      note: "Each key can make 600 requests an hour by default, and your API keys page shows how many it has made.",
+    },
+    bitly: { verdict: "yes", note: "1,000 API requests a month." },
+    source: "pricing",
+  },
+  {
+    feature: "No IP addresses stored for clicks",
+    hrva: { verdict: "yes", note: "Daily totals per link. Nothing about a single click." },
+    bitly: {
+      verdict: "no",
+      note: "Its privacy policy lists the IP address and the location derived from it, referring websites, the time and date of each access, device settings such as browser, operating system and language, cookies and mobile advertising identifiers.",
+    },
     source: "privacy",
   },
   {
-    feature: "Custom domains",
-    hrva: "Free, as a subdomain such as go.example.com. One per account, and up to 20 on approved request, each reviewed by a person.",
-    bitly: "From the Growth plan, $29 a month billed annually, which includes a custom domain.",
+    feature: "Custom domain on the free plan",
+    hrva: {
+      verdict: "yes",
+      note: "A subdomain such as go.example.com. One per account, and up to 20 on approved request, each reviewed by a person.",
+    },
+    bitly: { verdict: "no", note: "Growth plan, $29 a month billed annually, which includes a custom domain." },
     source: "pricing",
   },
   {
-    feature: "Team accounts",
-    hrva: "Not available. One account per person.",
-    bitly: "Multiple users and group permissions on the Enterprise plan, with custom pricing.",
+    feature: "Team accounts on the free plan",
+    hrva: { verdict: "no", note: "Not available. One account per person." },
+    bitly: { verdict: "no", note: "Multiple users and group permissions are on the Enterprise plan, with custom pricing." },
     source: "pricing",
   },
 ]
@@ -129,6 +148,9 @@ export default function BitlyAlternativePage() {
           Bitly&apos;s facts were checked on {checked} on its <a href={sources.pricing} className="text-brand-link">pricing page</a>{" "}
           and in its <a href={sources.privacy} className="text-brand-link">privacy policy</a>. They may have changed since.
         </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A tick means the plan has it, or does it the way a reader would want. A cross means it does not. A note gives the figure or the condition.
+        </p>
         <table role="table" aria-labelledby="comparison-heading" className="mt-5 block w-full text-sm sm:table">
           <thead role="rowgroup" className="hidden sm:table-header-group">
             <tr role="row" className="border-b text-left">
@@ -145,14 +167,15 @@ export default function BitlyAlternativePage() {
                 </th>
                 <td role="cell" className="block py-1 leading-relaxed sm:table-cell sm:py-3 sm:pr-4 sm:align-top">
                   <span className="font-medium text-muted-foreground sm:hidden">hrva.cc: </span>
-                  {row.hrva}
+                  <VerdictCell {...row.hrva} />
                 </td>
                 <td role="cell" className="block py-1 leading-relaxed sm:table-cell sm:py-3 sm:align-top">
                   <span className="font-medium text-muted-foreground sm:hidden">Bitly Free plan: </span>
-                  {row.bitly}{" "}
-                  <a href={sources[row.source]} className="whitespace-nowrap text-xs text-brand-link">
-                    {sourceLabels[row.source]}
-                  </a>
+                  <VerdictCell {...row.bitly}>
+                    <a href={sources[row.source]} className="whitespace-nowrap text-xs text-brand-link">
+                      {sourceLabels[row.source]}
+                    </a>
+                  </VerdictCell>
                 </td>
               </tr>
             ))}

@@ -1,7 +1,7 @@
 export const BITLY_COMPARISON = {
   path: "/compare/bitly-alternative",
   published: false,
-  checkedOn: "2026-10-29",
+  checkedOn: "2026-11-09",
   sources: {
     pricing: "https://bitly.com/pages/pricing",
     privacy: "https://bitly.com/pages/privacy",

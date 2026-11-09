@@ -1,6 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { JSON_LD_IDS, JsonLdScript, pageBreadcrumbs, reference } from "@/components/json-ld"
+import { VerdictCell, type Verdict } from "@/components/compare/verdict-cell"
 import { StaticPage } from "@/components/static-page"
 import { Button } from "@/components/ui/button"
 import { FREE_PLANS_COMPARISON } from "@/lib/comparisons"
@@ -37,27 +38,38 @@ const comparisonJsonLd = {
 
 type Vendor = keyof typeof sources
 
+interface Cell {
+  verdict: Verdict
+  note?: string
+}
+
 interface Row {
   feature: string
-  hrva: string
-  dub: string
-  shortio: string
-  bitly: string
-  rebrandly: string
+  hrva: Cell
+  dub: Cell
+  shortio: Cell
+  bitly: Cell
+  rebrandly: Cell
   sources: Record<Vendor, string>
 }
 
 const rows: Row[] = [
   {
-    feature: "Custom domains on the free plan",
-    hrva:
-      "Yes, as a subdomain such as go.example.com. One per account, and up to 20 on approved request, each reviewed by a person. Root domains are not supported.",
-    dub: "3 custom domains.",
-    shortio: "5 custom domains. Domain registration fees are not included in the plan.",
-    bitly:
-      "Not included. Branded links, which are links on your own custom domain, start at the Growth plan ($29 a month, $348 annual charge), which also lists a complimentary custom domain.",
-    rebrandly:
-      "Yes, including one you already own. The Free plan lists 1 custom domain (shown as Yourbrand.bio) and a domain count of 1, plus the free Rebrand.ly domain, and is marked for connecting domains you already own.",
+    feature: "Custom domain on the free plan",
+    hrva: {
+      verdict: "yes",
+      note: "A subdomain such as go.example.com. One per account, and up to 20 on approved request, each reviewed by a person. Root domains are not supported.",
+    },
+    dub: { verdict: "yes", note: "3 custom domains." },
+    shortio: { verdict: "yes", note: "5 custom domains. Domain registration fees are not included in the plan." },
+    bitly: {
+      verdict: "no",
+      note: "Branded links, which are links on your own custom domain, start at the Growth plan, $29 a month ($348 annual charge), which also lists a complimentary custom domain.",
+    },
+    rebrandly: {
+      verdict: "yes",
+      note: "1 custom domain (shown as Yourbrand.bio) plus the free Rebrand.ly domain. Domains you already own can be connected.",
+    },
     sources: {
       dub: "Free plan card",
       shortio: "Free column, Custom domains",
@@ -66,13 +78,15 @@ const rows: Row[] = [
     },
   },
   {
-    feature: "Links you can create",
-    hrva: "No monthly cap. Up to 60 links an hour per account.",
-    dub: "25 new links a month.",
-    shortio:
-      "1,000 branded links in total, issued once and usable over the account's lifetime. Links created through the API or bulk create: 1,000.",
-    bitly: "5 links a month.",
-    rebrandly: "10 links a month.",
+    feature: "Links without a monthly cap",
+    hrva: { verdict: "yes", note: "Up to 60 links an hour per account." },
+    dub: { verdict: "no", note: "25 new links a month." },
+    shortio: {
+      verdict: "no",
+      note: "1,000 branded links in total, issued once and usable over the account's lifetime. Links created through the API or bulk create: 1,000.",
+    },
+    bitly: { verdict: "no", note: "5 links a month." },
+    rebrandly: { verdict: "no", note: "10 links a month." },
     sources: {
       dub: "Free plan card",
       shortio: "Free column, Branded links total",
@@ -81,13 +95,15 @@ const rows: Row[] = [
     },
   },
   {
-    feature: "Click tracking",
-    hrva: "Daily totals per link, with no IP addresses stored.",
-    dub: "1K tracked events a month, with 30 days of analytics retention.",
-    shortio:
-      "50,000 tracked clicks a month. Redirects are unlimited, and the FAQ says detailed statistics are viewable for the first 50,000 clicks.",
-    bitly: "Unlimited clicks and QR code scans.",
-    rebrandly: "Unlimited clicks and QR code scans. Engagement data covers 100 clicks a month.",
+    feature: "Click tracking on the free plan",
+    hrva: { verdict: "yes", note: "Daily totals per link, with no IP addresses stored." },
+    dub: { verdict: "yes", note: "1K tracked events a month, with 30 days of analytics retention." },
+    shortio: {
+      verdict: "yes",
+      note: "50,000 tracked clicks a month. Redirects are unlimited, and the FAQ says detailed statistics are viewable for the first 50,000 clicks.",
+    },
+    bitly: { verdict: "yes", note: "Unlimited clicks and QR code scans." },
+    rebrandly: { verdict: "yes", note: "Unlimited clicks and QR code scans. Engagement data covers 100 clicks a month." },
     sources: {
       dub: "Free plan card",
       shortio: "Free column, Tracked clicks and FAQ",
@@ -96,12 +112,15 @@ const rows: Row[] = [
     },
   },
   {
-    feature: "Ads",
-    hrva: "None.",
-    dub: "Not stated on its pricing page.",
-    shortio: "Not stated on its pricing page.",
-    bitly: "The Free plan is listed as \"With Ads\".",
-    rebrandly: "Not stated on its pricing page. Free plan QR codes and the free link gallery carry a watermark.",
+    feature: "No ads",
+    hrva: { verdict: "yes" },
+    dub: { verdict: "unknown" },
+    shortio: { verdict: "unknown" },
+    bitly: { verdict: "no", note: "The Free plan is listed as \"With Ads\"." },
+    rebrandly: {
+      verdict: "unknown",
+      note: "Free plan QR codes and the free link gallery carry a watermark.",
+    },
     sources: {
       dub: "Whole page",
       shortio: "Whole page",
@@ -111,11 +130,11 @@ const rows: Row[] = [
   },
   {
     feature: "Open source",
-    hrva: "Yes, under the GPL-3.0 licence.",
-    dub: "Not stated on its pricing page.",
-    shortio: "Not stated on its pricing page.",
-    bitly: "Not stated on its pricing page.",
-    rebrandly: "Not stated on its pricing page.",
+    hrva: { verdict: "yes", note: "Under the GPL-3.0 licence." },
+    dub: { verdict: "unknown" },
+    shortio: { verdict: "unknown" },
+    bitly: { verdict: "unknown" },
+    rebrandly: { verdict: "unknown" },
     sources: {
       dub: "Whole page",
       shortio: "Whole page",
@@ -141,7 +160,7 @@ export default function FreeCustomDomainShortenersPage() {
       lead={
         <p>
           This page compares hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly. Each competitor
-          figure is read from that vendor&apos;s own pricing page. Where a page does not state something, the table says so.
+          figure is read from that vendor&apos;s own pricing page. Where a page does not state something, the table says Not stated.
         </p>
       }
       after={<JsonLdScript data={comparisonJsonLd} />}
@@ -159,6 +178,9 @@ export default function FreeCustomDomainShortenersPage() {
             </span>
           ))}
           . They may have changed since.
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A tick means the plan has it, or does it the way a reader would want. A cross means it does not. A note gives the figure or the condition.
         </p>
         <table role="table" aria-labelledby="free-plans-heading" className="mt-5 block w-full text-sm lg:table">
           <thead role="rowgroup" className="hidden lg:table-header-group">
@@ -178,16 +200,17 @@ export default function FreeCustomDomainShortenersPage() {
                 </th>
                 <td role="cell" className="block break-words py-1 leading-relaxed lg:table-cell lg:py-3 lg:pr-4 lg:align-top">
                   <span className="font-medium text-muted-foreground lg:hidden">hrva.cc: </span>
-                  {row.hrva}
+                  <VerdictCell {...row.hrva} />
                 </td>
                 {vendors.map(({ key, name }) => (
                   <td key={key} role="cell" className="block break-words py-1 leading-relaxed lg:table-cell lg:py-3 lg:pr-4 lg:align-top">
                     <span className="font-medium text-muted-foreground lg:hidden">{name} Free: </span>
-                    {row[key]}{" "}
-                    <a href={sources[key]} className="text-xs text-brand-link">
-                      {name} pricing
-                    </a>
-                    <span className="text-xs text-muted-foreground"> ({row.sources[key]})</span>
+                    <VerdictCell {...row[key]}>
+                      <a href={sources[key]} className="text-xs text-brand-link">
+                        {name} pricing
+                      </a>
+                      <span className="text-xs text-muted-foreground"> ({row.sources[key]})</span>
+                    </VerdictCell>
                   </td>
                 ))}
               </tr>
