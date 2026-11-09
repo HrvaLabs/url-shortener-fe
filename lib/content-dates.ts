@@ -9,7 +9,7 @@ export const CONTENT_UPDATED = {
   "/help/link-in-bio": "2026-11-01",
   "/help/notifications": "2026-11-02",
   "/help/install-app": "2026-10-29",
-  "/help/custom-domains": "2026-11-02",
+  "/help/custom-domains": "2026-11-09",
   "/mcp": "2026-11-01",
   "/report": "2026-10-27",
   "/validate": "2026-10-21",

@@ -135,7 +135,7 @@ check("step labels", () => {
 check("link mode labels and hints", () => {
   assert.deepEqual(LINK_MODE_LABELS, { MOVE: "Move its links to hrva.cc", DEACTIVATE: "Turn its links off" })
   assert.deepEqual(LINK_MODE_HINTS, {
-    MOVE: "Links keep their alias when it's free on hrva.cc and get a new one otherwise.",
+    MOVE: "Links keep their alias when it's free and allowed on hrva.cc and get a new one otherwise.",
     DEACTIVATE: "Links stay in your list, turned off.",
   })
 })

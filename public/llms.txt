@@ -13,7 +13,7 @@ Shortening works without an account. A free account adds custom aliases, editing
 
 ## Use hrva.cc from AI assistants and code
 
-- [MCP server setup](https://app.hrva.cc/mcp): connect Claude, ChatGPT, Cursor or VS Code to https://hrva.cc/mcp and sign in with a free hrva.cc account. Tools: shorten_url, list_links and link_stats. Admin accounts also see moderation tools; for everyone else they refuse
+- [MCP server setup](https://app.hrva.cc/mcp): connect Claude, ChatGPT, Cursor or VS Code to https://hrva.cc/mcp and sign in with a free hrva.cc account. Tools: shorten_url, list_links and link_stats
 - [API quickstart](https://app.hrva.cc/developers): create a key, then POST to https://hrva.cc/api/v1/urls; examples in curl, JavaScript and Python, request fields, errors and limits
 - [REST API reference (Swagger)](https://hrva.cc/swagger-ui/index.html): create links with an API key in the X-Api-Key header
 - [Backend source code](https://github.com/HrvaLabs/url-shortener): Spring Boot API

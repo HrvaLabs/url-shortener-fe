@@ -76,8 +76,7 @@ export default function McpPage() {
               <Paragraph>
                 MCP, the Model Context Protocol, is an open standard that lets an AI assistant use tools from other
                 services. The hrva.cc MCP server gives yours three tools, all working in your own account: shorten a URL,
-                list your links, and read a link&apos;s visit totals. Admin accounts also see moderation tools; for everyone else
-                they refuse. You connect it once by signing in to hrva.cc, and you can disconnect it at any time. It is
+                list your links, and read a link&apos;s visit totals. You connect it once by signing in to hrva.cc, and you can disconnect it at any time. It is
                 free. To shorten links from your own code instead, use the{" "}
                 <Link href="/developers" className="text-brand-link">
                   API
