@@ -1,6 +1,6 @@
 export const BITLY_COMPARISON = {
   path: "/compare/bitly-alternative",
-  published: false,
+  published: true,
   checkedOn: "2026-11-09",
   sources: {
     pricing: "https://bitly.com/pages/pricing",
@@ -10,7 +10,7 @@ export const BITLY_COMPARISON = {
 
 export const FREE_PLANS_COMPARISON = {
   path: "/compare/free-custom-domain-shorteners",
-  published: false,
+  published: true,
   checkedOn: "2026-11-09",
   sources: {
     dub: "https://dub.co/pricing/links",

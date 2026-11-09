@@ -90,6 +90,10 @@ export default function CustomDomainUrlShortenerPage() {
           looks again. The steps for Cloudflare, Namecheap, GoDaddy and Porkbun, and what each message means, are in{" "}
           <Link href="/help/custom-domains">the custom domains guide</Link>.
         </p>
+        <p>
+          How the free plans of hrva.cc, Dub, Short.io, Bitly and Rebrandly compare on custom domains is in{" "}
+          <Link href="/compare/free-custom-domain-shorteners">the free custom domain comparison</Link>.
+        </p>
 
         <h2 id="limits">The limits</h2>
         <ul>
