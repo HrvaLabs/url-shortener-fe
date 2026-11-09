@@ -100,7 +100,7 @@ const rows: Row[] = [
     },
     bitly: {
       verdict: "no",
-      note: "Unlimited clicks and QR code scans, but historic performance data starts at the Core plan, with 30 days.",
+      note: "Clicks are counted, but click and scan history starts at the Core plan, with 30 days.",
     },
     rebrandly: { verdict: "yes", note: "Unlimited clicks and QR code scans. Engagement data covers 100 clicks a month." },
     sources: {
