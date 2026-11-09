@@ -1309,8 +1309,9 @@ export type SettingKey =
   | "SIGN_IN_FORM_ACCOUNT_LINKS"
   | "SIGN_IN_FORM_NEW_ACCOUNT_DAYS"
   | "BRAND_SITES_TOP_SITES"
+  | "OPENAI_APPS_CHALLENGE"
 
-export type SettingGroup = "ACCESS" | "LINKS" | "SAFETY" | "ALERTS" | "DIGEST" | "EMAILS" | "ABUSE_REPORTS"
+export type SettingGroup = "ACCESS" | "LINKS" | "SAFETY" | "ALERTS" | "DIGEST" | "EMAILS" | "ABUSE_REPORTS" | "APP_DIRECTORIES"
 
 export type SettingType = "SWITCH" | "NUMBER" | "TEXT" | "ADDRESSES"
 
@@ -1608,6 +1609,7 @@ export interface LinksStats {
 }
 
 export interface UsersStats {
+  signupSources?: CountEntry[]
   notifications?: { consents: CountEntry[]; channels: CountEntry[]; autoDisabledChannels: number }
 }
 
@@ -1852,4 +1854,28 @@ export interface SystemStats {
 
 export interface DomainRuleCreated {
   domainsDisabled?: number
+}
+
+export type VisitKind = "utm" | "referrer" | "direct"
+
+export interface VisitSource {
+  source: string
+  kind: VisitKind
+  visits: number
+}
+
+export interface VisitPage {
+  page: string
+  visits: number
+}
+
+export interface VisitStats {
+  connected: boolean
+  days: number
+  requestedDays: number
+  from: string
+  to: string
+  total: number
+  sources: VisitSource[]
+  pages: VisitPage[]
 }

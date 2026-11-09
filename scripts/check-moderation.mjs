@@ -163,8 +163,8 @@ check("noEffectText", () => {
 })
 
 check("group labels, in the catalogue's order", () => {
-  assert.deepEqual(Object.keys(SETTING_GROUP_LABELS), ["ACCESS", "LINKS", "SAFETY", "ALERTS", "DIGEST", "EMAILS", "ABUSE_REPORTS"])
-  assert.deepEqual(Object.values(SETTING_GROUP_LABELS), ["Access", "Links", "Safety", "Alerts", "Digest", "Emails", "Abuse reports"])
+  assert.deepEqual(Object.keys(SETTING_GROUP_LABELS), ["ACCESS", "LINKS", "SAFETY", "ALERTS", "DIGEST", "EMAILS", "ABUSE_REPORTS", "APP_DIRECTORIES"])
+  assert.deepEqual(Object.values(SETTING_GROUP_LABELS), ["Access", "Links", "Safety", "Alerts", "Digest", "Emails", "Abuse reports", "App directories"])
 })
 
 check("safetyOffLines: nothing off", () => {

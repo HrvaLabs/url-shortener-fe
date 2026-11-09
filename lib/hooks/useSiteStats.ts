@@ -48,3 +48,12 @@ export function useSystemStats(days: AnalyticsRange) {
     retry: retryUnlessRefused,
   })
 }
+
+export function useVisitStats(days: AnalyticsRange) {
+  return useQuery({
+    queryKey: ["admin", "stats", "visits", days],
+    queryFn: () => adminApi.getVisitStats(days),
+    placeholderData: keepPreviousData,
+    retry: false,
+  })
+}

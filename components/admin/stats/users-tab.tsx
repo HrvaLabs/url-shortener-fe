@@ -3,6 +3,7 @@
 import { RankedList } from "@/components/admin/stats/ranked-list"
 import { StackedDailyChart } from "@/components/admin/stats/stacked-daily-chart"
 import { StatGrid } from "@/components/admin/stats/stat-grid"
+import { SignupSources, VisitTables } from "@/components/admin/stats/visit-tables"
 import { StatsPanel } from "@/components/admin/stats/stats-panel"
 import { providerLabels, type SignInProvider } from "@/lib/admin-stats"
 import { CHANNEL_EVENT_LABELS, CHANNEL_TYPES, EMAIL_NOTIFICATION_NOUNS } from "@/lib/notifications"
@@ -108,6 +109,8 @@ function UsersBody({ data, days }: UsersBodyProps) {
           ]}
         />
       )}
+      <VisitTables days={days} />
+      <SignupSources entries={data.signupSources} />
       {bioPages && (
         <StatGrid
           title="Bio pages"

@@ -177,6 +177,7 @@ export const SETTING_GROUP_LABELS: Record<SettingGroup, string> = {
   DIGEST: "Digest",
   EMAILS: "Emails",
   ABUSE_REPORTS: "Abuse reports",
+  APP_DIRECTORIES: "App directories",
 }
 
 const NONE = "None"

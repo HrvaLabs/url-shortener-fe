@@ -1,5 +1,5 @@
 import { DEFAULT_ANALYTICS_RANGE } from "./analytics"
-import type { AnalyticsRange, AnalyticsTotals, CreatedVia, EmailStatus, ReviewResolution, ReviewSource } from "./types"
+import type { AnalyticsRange, AnalyticsTotals, CreatedVia, EmailStatus, ReviewResolution, ReviewSource, VisitKind } from "./types"
 
 export type StatsTab = "traffic" | "links" | "users" | "safety" | "system"
 
@@ -23,6 +23,12 @@ export const createdViaLabels: Record<CreatedVia | "unknown", string> = {
   ANONYMOUS_WEB: "Website, no account",
   ANONYMOUS_MCP: "AI connector, no account",
   unknown: "Unknown (made before this was recorded)",
+}
+
+export const visitKindLabels: Record<VisitKind, string> = {
+  utm: "From a link tag",
+  referrer: "From the page before",
+  direct: "Typed or bookmarked",
 }
 
 export type SignInProvider = "local" | "google" | "github"

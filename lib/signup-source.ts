@@ -23,3 +23,10 @@ export const SIGNUP_SOURCE_QUESTION = "How did you find hrva.cc?"
 export const SIGNUP_SOURCE_NOTE = "Optional. The admin sees only counts per answer, not who answered what."
 export const SIGNUP_SOURCE_PICK_FIRST = "Pick an answer, or skip."
 export const SIGNUP_SOURCE_FAILED = "Couldn't save your answer. Try again, or skip."
+
+export const SIGNUP_ANSWER_ORDER: SignupSource[] = [...SIGNUP_SOURCES, "SKIPPED"]
+
+export const SIGNUP_ANSWER_LABELS: Record<SignupSource, string> = {
+  ...SIGNUP_SOURCE_LABELS,
+  SKIPPED: "Skipped",
+}
