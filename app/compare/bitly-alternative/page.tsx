@@ -91,7 +91,7 @@ const rows: Row[] = [
   },
   {
     feature: "Custom domains",
-    hrva: "Not available.",
+    hrva: "Free, as a subdomain such as go.example.com. One per account, and up to 20 on approved request, each reviewed by a person.",
     bitly: "From the Growth plan, $29 a month billed annually, which includes a custom domain.",
     source: "pricing",
   },
@@ -118,7 +118,7 @@ export default function BitlyAlternativePage() {
         <p>
           hrva.cc is a free, open-source URL shortener with no paid plans and no ads. Compared with Bitly&apos;s Free plan,
           it has no monthly cap on links, custom aliases or QR codes, and it keeps only daily totals about clicks, with no
-          IP addresses. Bitly is the better choice when you need your own domain, a team account or its integrations.
+          IP addresses. Bitly is the better choice when you need a team account or its integrations.
         </p>
       }
       after={<JsonLdScript data={comparisonJsonLd} />}
@@ -163,7 +163,10 @@ export default function BitlyAlternativePage() {
       <div className="prose-custom">
         <h2 id="bitly-better">When Bitly is the better choice</h2>
         <ul>
-          <li>You want short links on your own domain. hrva.cc only makes hrva.cc links.</li>
+          <li>
+            You want short links on a root domain such as yourbrnd.co. hrva.cc custom domains are subdomains only, such as
+            go.example.com, and every domain application is reviewed by a person.
+          </li>
           <li>Several people need to share one account with permissions. hrva.cc accounts are for one person.</li>
           <li>
             You rely on its extras, such as integrations with other apps, mobile deep linking, browser extensions and mobile
