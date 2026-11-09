@@ -30,6 +30,29 @@ export default function LinksHelpPage() {
                 different links. Links made before this rule keep their aliases.
               </p>
 
+              <h2 id="custom-aliases">Choosing your own alias</h2>
+              <p>
+                With a free account you can set the alias yourself when you create a link, so it opens at, for example,
+                hrva.cc/menu. The create form has an alias field; leave it empty to get a random one.
+              </p>
+              <ul>
+                <li>An alias has 1 to 32 letters, numbers, hyphens or underscores.</li>
+                <li>
+                  Capital letters don&apos;t make a new name: hrva.cc/Menu and hrva.cc/menu are the same name, so once one
+                  exists the other is taken. A random alias is still case-sensitive, as described above.
+                </li>
+                <li>
+                  A name that contains a brand name is refused, and some names are reserved for the site itself. Try another
+                  name; the refusal says which of the rules it was.
+                </li>
+                <li>A name that someone already uses is taken. Try another.</li>
+              </ul>
+              <p>
+                Custom aliases can be turned off by the site, and then the refusal says so. To see whether a name is free
+                before you sign up, use the <Link href="/custom-short-links">name checker</Link>. It tells you only
+                whether the name is free at that moment and does not hold it. Questions: <a href="mailto:support@hrva.cc">support@hrva.cc</a>.
+              </p>
+
               <h2 id="edit">Editing a link</h2>
               <p>
                 In <Link href="/dashboard">My URLs</Link>, <strong>Edit link</strong> (the pencil on each link) opens the

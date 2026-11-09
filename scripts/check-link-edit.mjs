@@ -216,7 +216,7 @@ check("refusals show under the field they are about", () => {
   assert.equal(editErrorField(refusal(409, "This link has used all its clicks. Edit it to raise or remove its visit limit first."), false), "visitLimit")
   assert.equal(editErrorField(refusal(429, "This link's destination can change 5 times a day. Try again in 43 minutes."), true), "destination")
   assert.equal(editErrorField(refusal(503, "Changing where a link points isn't available right now. Try again in a minute."), true), "destination")
-  assert.equal(editErrorField(refusal(400, "This destination is on a blocklist and can't be shortened. If you think that's a mistake, contact us."), true), "destination")
+  assert.equal(editErrorField(refusal(400, "This destination is on a blocklist and can't be shortened. If you think that's a mistake, write to support@hrva.cc."), true), "destination")
   assert.equal(editErrorField(refusal(400, "This link's domain isn't active, so the link can't be turned on."), false), "form")
   assert.equal(editErrorField(new Error("Can't reach hrva.cc right now."), true), "form")
 })

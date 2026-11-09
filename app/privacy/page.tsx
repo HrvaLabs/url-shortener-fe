@@ -28,8 +28,9 @@ export default function PrivacyPage() {
             <div className="mt-8 rounded-xl border bg-muted/40 p-5">
               <p className="leading-7 text-foreground">
                 In short: we collect only what the service needs to work. No ads, no tracking
-                cookies, no third-party analytics. Link statistics are daily counts and never store
-                visitors&apos; IP addresses.
+                cookies, no analytics scripts. Link statistics are daily counts and never store
+                visitors&apos; IP addresses. Visits to hrva.cc&apos;s own pages are counted by where
+                the visitor came from, with no IP address and nothing stored on the device.
               </p>
             </div>
 
@@ -79,6 +80,15 @@ export default function PrivacyPage() {
                 Legal basis: performance of a contract (Art. 6(1)(b) GDPR) — this data is required to
                 provide your account.
               </p>
+              <p id="signup-question">
+                Shortly after you sign up, the dashboard may ask &quot;How did you find hrva.cc?&quot;
+                You can pick one of a fixed list of answers (an AI assistant, a search engine, an
+                hrva.cc link or bio page someone shared, someone recommended it, a website, list or
+                directory, or something else) or skip. It is optional, and skipping changes nothing
+                about your account. The answer, or the fact that you skipped, is stored with your
+                account so the question is not asked again, and it is deleted with your account. The
+                admin sees only how many accounts gave each answer, not who gave which.
+              </p>
 
               <h3>Link statistics (visitors who open short links)</h3>
               <p>
@@ -105,6 +115,28 @@ export default function PrivacyPage() {
               <p>
                 Legal basis: legitimate interest (Art. 6(1)(f) GDPR) — providing link owners with
                 basic, privacy-preserving usage statistics and protecting the service from abuse.
+              </p>
+
+              <h3 id="visit-counts">Visits to hrva.cc&apos;s own pages</h3>
+              <p>
+                When someone opens a page of hrva.cc itself, such as the home page, a help page or a
+                blog post, the Worker that serves the site adds one data point to a dataset in
+                Cloudflare Workers Analytics Engine. It holds three things: where the visitor came
+                from, which is the host of the referring site (for example chatgpt.com), the value of
+                the <em>utm_source</em> tag in the address when there is one, or &quot;direct&quot; when
+                there is neither; the page path without anything after a question mark; and the time.
+                A <em>utm_source</em> value is kept only if it is made of lowercase letters, digits,
+                dots and hyphens and is at most 64 characters, otherwise it is recorded as
+                &quot;other&quot;. The point is to see which sites send visitors to hrva.cc.
+              </p>
+              <p>
+                No IP address, device or browser identifier, country, cookie or anything in your
+                browser is stored for this, and the counter adds no script to the page. It does not
+                count short link clicks (those are the link statistics above), pages you reach while
+                signed in or signing in, the admin area, or pages opened from another page of hrva.cc.
+                Prefetches, requests Cloudflare marks as verified bots, and requests that fail are skipped. Cloudflare Workers Analytics Engine
+                keeps these points for 3 months; hrva.cc does not keep them longer. See Cloudflare&apos;s{" "}
+                <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
               </p>
 
               <h3>Bio pages</h3>
@@ -448,6 +480,11 @@ export default function PrivacyPage() {
                   receives its destination URL and opens it to take the screenshot. hrva.cc keeps each screenshot for 7
                   days and deletes it in the next nightly cleanup. No visitor data is sent. See
                   Cloudflare&apos;s <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+                  The counts of visits to hrva.cc&apos;s own pages (see{" "}
+                  <a href="#visit-counts">Visits to hrva.cc&apos;s own pages</a>) are stored in Cloudflare
+                  Workers Analytics Engine. Cloudflare&apos;s own terms apply there: its{" "}
+                  <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>{" "}
+                  and <a href="https://www.cloudflare.com/website-terms/" target="_blank" rel="noopener noreferrer">Website Terms of Use</a>.
                 </li>
                 <li>
                   <strong>Discord</strong> — so the admin sees moderation events quickly, hrva.cc
@@ -527,6 +564,14 @@ export default function PrivacyPage() {
 
               <h2 id="retention">How long we keep data</h2>
               <ul>
+                <li>
+                  <strong>Counts of visits to hrva.cc&apos;s own pages</strong> — kept by Cloudflare
+                  Workers Analytics Engine for 3 months.
+                </li>
+                <li>
+                  <strong>Your answer to &quot;How did you find hrva.cc?&quot;</strong> — kept with your
+                  account and deleted with it.
+                </li>
                 <li>
                   <strong>Unique-visitor hashes and the daily key</strong> — kept only in Redis and
                   deleted a few hours after the day ends.

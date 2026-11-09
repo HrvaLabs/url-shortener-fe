@@ -111,7 +111,8 @@ export default function AboutPage() {
         <p>
           For anything about your data, write to <a href="mailto:privacy@hrvalabs.net">privacy@hrvalabs.net</a>. To
           report a short link or a bio page that leads somewhere harmful, use the <Link href="/report">report form</Link>{" "}
-          or write to <a href="mailto:abuse@hrva.cc">abuse@hrva.cc</a>. Reports go to a person.
+          or write to <a href="mailto:abuse@hrva.cc">abuse@hrva.cc</a>. Reports go to a person. For help with
+          your account, a link or a custom domain, write to <a href="mailto:support@hrva.cc">support@hrva.cc</a>.
         </p>
       </div>
     </StaticPage>

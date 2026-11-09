@@ -528,6 +528,10 @@ function FeatureGrid() {
                 <Link href="/custom-domain-url-shortener" className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
                   Learn more<span className="sr-only"> about custom domains</span>
                 </Link>
+                {" "}Or pick the name of a link on hrva.cc itself:{" "}
+                <Link href="/custom-short-links" className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                  check a name<span className="sr-only"> for a custom short link</span>
+                </Link>
               </>
             }
           >
