@@ -72,6 +72,9 @@ function RegisterForm({ next }: { next: string | null }) {
             <div className="text-center">
               <h1 className="font-display text-2xl">Create an account</h1>
               {!paused && <p className="mt-1.5 text-sm text-muted-foreground">Start managing your links</p>}
+              {!paused && claimedAlias && !sentTo && (
+                <p className="mt-1.5 text-sm text-muted-foreground [overflow-wrap:anywhere]">Then create hrva.cc/{claimedAlias}.</p>
+              )}
             </div>
             {sentTo ? (
               <div className="mt-8 space-y-4">

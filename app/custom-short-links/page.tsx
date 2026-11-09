@@ -35,7 +35,7 @@ export default function CustomShortLinksPage() {
       <div className="prose-custom">
         <h2 id="what-it-is">What a custom alias is</h2>
         <p>
-          A short link normally ends in random characters, like hrva.cc/k3x9Q. A custom alias is a name you choose
+          A short link normally ends in random characters, like <code>hrva.cc/k3x9Q</code>. A custom alias is a name you choose
           instead, like hrva.cc/menu. You need a free account to create one, and you set the alias when you create the
           link.
         </p>
@@ -46,6 +46,7 @@ export default function CustomShortLinksPage() {
           <li>Capital letters don&apos;t make a new name: once hrva.cc/karlo exists, Karlo and KARLO are taken too. Opening a link still needs the exact letters, so share it as you created it.</li>
           <li>Names that contain a brand name are refused.</li>
           <li>Some names are reserved for the site itself.</li>
+          <li>A name that looks like one of hrva.cc&apos;s own pages, such as support or admin, can&apos;t be used.</li>
         </ul>
 
         <h2 id="checking">What checking a name does</h2>

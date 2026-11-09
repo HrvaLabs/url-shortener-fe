@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import "./resolve-ts-imports.mjs"
 
-const { CLAIM_RULES, rulesLineNeeded, aliasFromInput, aliasFromNext, claimMessage, claimNextPath, isAliasShaped } = await import("../lib/claim.ts")
+const { CLAIM_RULES, rulesLineNeeded, aliasFromInput, aliasFromNext, claimMessage, claimResultLine, claimNextPath, isAliasShaped } = await import("../lib/claim.ts")
 const { safeNext } = await import("../lib/utils.ts")
 
 let failures = 0
@@ -56,8 +56,13 @@ await check("everyStatusHasAMessage", () => {
   }
   const invalid = claimMessage("INVALID", CLAIM_RULES)
   assert.equal(invalid.text, CLAIM_RULES)
-  assert.equal(rulesLineNeeded(invalid.text), false)
-  assert.equal(rulesLineNeeded(claimMessage("TAKEN", "This short URL is already taken. Try another.").text), true)
+  assert.equal(rulesLineNeeded("INVALID", invalid.text), false)
+  assert.equal(rulesLineNeeded("INVALID", "Names can't start with a hyphen."), true)
+  for (const status of ["DISABLED", "RESERVED", "TAKEN"]) assert.equal(rulesLineNeeded(status, "Some reason."), false, status)
+  assert.equal(claimResultLine("KARLO-QA", "TAKEN", "Taken."), "hrva.cc/KARLO-QA: Taken. Capital letters don't make a new name.")
+  assert.equal(claimResultLine("karlo", "TAKEN", "Taken."), "hrva.cc/karlo: Taken.")
+  assert.equal(claimResultLine("Karlo", "RESERVED", "Reserved."), "hrva.cc/Karlo: Reserved.")
+  assert.equal(claimResultLine("", "INVALID", CLAIM_RULES), CLAIM_RULES)
   assert.equal(claimMessage("TAKEN", "This short URL is already taken. Try another.").text, "This short URL is already taken. Try another.")
   assert.ok(claimMessage("TAKEN", null).text.length > 0)
   assert.ok(claimMessage("SOMETHING_NEW", null).text.length > 0)

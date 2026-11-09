@@ -186,7 +186,7 @@ function LoginForm({ next }: { next: string | null }) {
                 <ProviderButtons next={next} explainOff />
                 <p className="mt-6 text-center text-sm text-muted-foreground">
                   Don&apos;t have an account?{" "}
-                  <Link href="/register" className="font-medium text-brand hover:underline">
+                  <Link href={next ? `/register?next=${encodeURIComponent(next)}` : "/register"} className="font-medium text-brand hover:underline">
                     Register
                   </Link>
                 </p>

@@ -4,7 +4,7 @@ export const ALIAS_PATTERN = /^[a-zA-Z0-9_-]{1,32}$/
 
 export const CLAIM_RULES = "Use 1 to 32 letters, numbers, hyphens or underscores."
 
-export const CLAIM_RATE_LIMITED = "You've checked a lot of names in a short time. Try again in an hour."
+export const CLAIM_RATE_LIMITED = "You've checked a lot of names in a short time. Try again later."
 
 const DASHBOARD = "/dashboard"
 
@@ -37,7 +37,14 @@ export const aliasFromNext = (next: string | null): string | null => {
   return alias !== null && isAliasShaped(alias) ? alias : null
 }
 
-export const rulesLineNeeded = (text: string): boolean => text !== CLAIM_RULES
+export const rulesLineNeeded = (status: string, text: string): boolean => status === "INVALID" && text !== CLAIM_RULES
+
+const CAPITALS_NOTE = "Capital letters don't make a new name."
+
+export const claimResultLine = (name: string, status: string, text: string): string => {
+  const note = status === "TAKEN" && name !== name.toLowerCase() ? ` ${CAPITALS_NOTE}` : ""
+  return name ? `hrva.cc/${name}: ${text}${note}` : `${text}${note}`
+}
 
 export const claimMessage = (status: string, reason: string | null): { tone: "ok" | "no"; text: string } => {
   const known = Object.hasOwn(FALLBACKS, status) ? FALLBACKS[status as AliasCheckStatus] : null

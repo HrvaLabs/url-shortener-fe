@@ -46,6 +46,10 @@ export default function LinksHelpPage() {
                   A name that contains a brand name is refused, and some names are reserved for the site itself. Try another
                   name; the refusal says which of the rules it was.
                 </li>
+                <li>
+                  A name that looks like one of hrva.cc&apos;s own pages, such as support or admin, can&apos;t be used. The
+                  refusal says &ldquo;This name looks like one of hrva.cc&apos;s own pages, so it can&apos;t be used. Try another.&rdquo;
+                </li>
                 <li>A name that someone already uses is taken. Try another.</li>
               </ul>
               <p>
