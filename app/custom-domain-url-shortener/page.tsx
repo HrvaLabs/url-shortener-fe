@@ -1,6 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { JsonLdScript, pageBreadcrumbs, techArticle } from "@/components/json-ld"
+import { CustomDomainApplyLink } from "@/components/custom-domain-apply-link"
 import { StaticPage } from "@/components/static-page"
 import { CONTENT_UPDATED } from "@/lib/content-dates"
 import { DOMAIN_LIMIT_MAX } from "@/lib/domains"
@@ -11,7 +12,7 @@ const title = "Free URL shortener for your own domain"
 const description =
   "Short links on your own subdomain, like go.example.com/menu, for free: apply with an account, a person reviews it, then add one CNAME record. What it takes and what the limits are."
 
-export const metadata: Metadata = pageMetadata({ title, description, path, absolute: true })
+export const metadata: Metadata = pageMetadata({ title, description, path })
 
 const articleJsonLd = {
   "@context": "https://schema.org",
@@ -66,7 +67,7 @@ export default function CustomDomainUrlShortenerPage() {
         <h2 id="how-setup-works">How setup works</h2>
         <ol>
           <li>
-            <Link href="/register">Create an account</Link>, open Settings and, under Custom domains, enter the
+            <CustomDomainApplyLink signedInText="Open Settings" signedOutText="Create an account" signedOutAfter=", open Settings" /> and, under Custom domains, enter the
             subdomain and say in a sentence what the links are for.
           </li>
           <li>
@@ -137,7 +138,7 @@ export default function CustomDomainUrlShortenerPage() {
 
         <h2 id="start">Start</h2>
         <p>
-          <Link href="/register">Create an account</Link> to apply, or read{" "}
+          <CustomDomainApplyLink signedInText="Apply in Settings" signedOutText="Create an account" signedOutAfter=" to apply" />, or read{" "}
           <Link href="/help/custom-domains">the full guide</Link> first. Who runs hrva.cc is on the{" "}
           <Link href="/about">About page</Link>.
         </p>

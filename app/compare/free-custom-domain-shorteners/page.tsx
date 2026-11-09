@@ -11,7 +11,7 @@ import { absoluteUrl, pageMetadata } from "@/lib/seo"
 const { path, published, checkedOn, sources } = FREE_PLANS_COMPARISON
 const title = "Free URL shorteners with custom domains compared"
 const description =
-  "What hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly include: custom domains, links, click tracking, ads and open source, read from each vendor's own pricing page."
+  "What hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly include: custom domains, links, click tracking, ads and open source, read from each vendor's own pricing page, except where a cell names another page."
 
 export const metadata: Metadata = {
   ...pageMetadata({ title, description, path }),
@@ -163,7 +163,7 @@ export default function FreeCustomDomainShortenersPage() {
       lead={
         <p>
           This page compares hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly. Each competitor
-          figure is read from that vendor&apos;s own pricing page. Where a page does not state something, the table says Not stated.
+          figure is read from that vendor&apos;s own pricing page, except where a cell names another page. Where a page does not state something, the table says Not stated.
         </p>
       }
       after={<JsonLdScript data={comparisonJsonLd} />}
@@ -188,10 +188,10 @@ export default function FreeCustomDomainShortenersPage() {
         <table role="table" aria-labelledby="free-plans-heading" className="mt-5 block w-full text-sm lg:table">
           <thead role="rowgroup" className="hidden lg:table-header-group">
             <tr role="row" className="border-b text-left align-top">
-              <th scope="col" role="columnheader" className="w-32 py-2 pr-4 font-semibold">Feature</th>
-              <th scope="col" role="columnheader" className="py-2 pr-4 font-semibold">hrva.cc</th>
+              <th scope="col" role="columnheader" className="w-32 py-2 pr-4 font-semibold lg:sticky lg:top-16 lg:z-10 lg:bg-background">Feature</th>
+              <th scope="col" role="columnheader" className="py-2 pr-4 font-semibold lg:sticky lg:top-16 lg:z-10 lg:bg-background">hrva.cc</th>
               {vendors.map(({ key, name }) => (
-                <th key={key} scope="col" role="columnheader" className="py-2 pr-4 font-semibold">{name} Free</th>
+                <th key={key} scope="col" role="columnheader" className="py-2 pr-4 font-semibold lg:sticky lg:top-16 lg:z-10 lg:bg-background">{name} Free</th>
               ))}
             </tr>
           </thead>
@@ -230,8 +230,8 @@ export default function FreeCustomDomainShortenersPage() {
             account. hrva.cc raises it to up to 20 only on request, after review.
           </li>
           <li>
-            Bitly and Rebrandly list unlimited clicks and QR code scans on their free plans. hrva.cc keeps daily totals per
-            link.
+            Dub and Short.io keep per-click detail on their free plans. hrva.cc keeps daily totals per link, with no IP
+            addresses.
           </li>
         </ul>
 
