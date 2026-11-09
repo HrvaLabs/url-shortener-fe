@@ -99,6 +99,9 @@ export const reloadForStaleChunk = (): boolean =>
   })
 
 const MISSING_CHUNK_STATUS = 404
+
+/** How long a probe waits for an answer before it counts as a network failure, so a stalled connection can't hold the checks. */
+export const PROBE_TIMEOUT_MS = 10_000
 const RELATIVE_CHUNK_PATH = /(?:^|[\s"'`(])(static\/(?:chunks|css|media)\/[^\s"'`)]+)/
 
 /** How a failed chunk answers a fresh request: `missing` (404, a deploy removed it), `present`, `network` (no answer) or `unknown`. */
@@ -164,11 +167,11 @@ const CHUNK_STATUSES: ChunkStatus[] = ["missing", "present", "network", "unknown
 export const chunkProbeNeeded = (failure: Omit<ChunkFailure, "status">): boolean =>
   new Set(CHUNK_STATUSES.map((status) => chunkFailureAction({ ...failure, status }))).size > 1
 
-/** Asks the network (never the cache) how a chunk answers; only the status is read. */
-export const probeChunk = async (url: string | null): Promise<ChunkStatus> => {
+/** Asks the network (never the cache) how a chunk answers; only the status is read, and no answer within `timeoutMs` is a network failure. */
+export const probeChunk = async (url: string | null, timeoutMs = PROBE_TIMEOUT_MS): Promise<ChunkStatus> => {
   if (!url) return "unknown"
   try {
-    const response = await fetch(url, { cache: "no-store" })
+    const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(timeoutMs) })
     response.body?.cancel().catch(() => undefined)
     return chunkStatusOf(response.status)
   } catch {

@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 
 const {
+  PROBE_TIMEOUT_MS,
   STALE_CHUNK_RELOAD_KEY,
   STALE_CHUNK_RELOAD_WINDOW_MS,
   chunkFailureAction,
@@ -265,10 +266,11 @@ const answers = {
   network: () => {
     throw new TypeError("Failed to fetch")
   },
+  never: (init) => new Promise((resolve, reject) => init?.signal?.addEventListener("abort", () => reject(init.signal.reason))),
 }
 
 const fakeBrowser = ({ online = true, answer = answers.present } = {}) => {
-  const browser = { reloads: 0, retries: 0, probes: [], listeners: new Map(), online, answer, storage: memoryStorage() }
+  const browser = { reloads: 0, retries: 0, probes: [], signals: [], listeners: new Map(), online, answer, storage: memoryStorage() }
   globalThis.window = {
     location: { origin: ORIGIN, pathname: `/page-${(PATHS.next += 1)}`, reload: () => (browser.reloads += 1) },
     sessionStorage: browser.storage,
@@ -278,7 +280,8 @@ const fakeBrowser = ({ online = true, answer = answers.present } = {}) => {
   Object.defineProperty(globalThis, "navigator", { configurable: true, get: () => ({ onLine: browser.online }) })
   globalThis.fetch = async (url, init) => {
     browser.probes.push({ url, cache: init?.cache })
-    return browser.answer()
+    browser.signals.push(init?.signal)
+    return browser.answer(init)
   }
   browser.retry = () => (browser.retries += 1)
   return browser
@@ -295,6 +298,16 @@ await checkAsync("a probe asks the network, never the cache, and reads only the 
   assert.equal(await probeChunk(CHUNK_URL), "network")
   assert.equal(await probeChunk(null), "unknown")
   assert.equal(browser.probes.length, 3, "no url, no request")
+})
+
+await checkAsync("a probe that never answers gives up after its timeout and counts as a network failure", async () => {
+  const browser = fakeBrowser({ answer: answers.never })
+  const stillWaiting = new Promise((resolve) => setTimeout(() => resolve("still waiting after 1 s"), 1_000))
+  assert.equal(await Promise.race([probeChunk(CHUNK_URL, 20), stillWaiting]), "network")
+  browser.answer = answers.present
+  await probeChunk(CHUNK_URL)
+  assert.ok(browser.signals.every((signal) => signal instanceof AbortSignal), "every probe, the default one included, carries a timeout signal")
+  assert.equal(PROBE_TIMEOUT_MS, 10_000)
 })
 
 await checkAsync("a background chunk that fails in a network drop never reloads the page", async () => {
