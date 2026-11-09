@@ -12,6 +12,7 @@ const columns = [
       { href: "/qr", label: "QR code generator" },
       { href: "/utm", label: "UTM builder" },
       { href: "/custom-domain-url-shortener", label: "Your own domain" },
+      { href: "/custom-short-links", label: "Check a custom name" },
       ...(BITLY_COMPARISON.published ? [{ href: BITLY_COMPARISON.path, label: "Bitly alternative" }] : []),
       { href: "/validate", label: "Check a link" },
       { href: "/stats", label: "Public stats" },

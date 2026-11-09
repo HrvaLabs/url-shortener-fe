@@ -547,7 +547,11 @@ function FeatureGrid() {
         </div>
 
         <p className="mt-8 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          Also included: custom aliases,{" "}
+          Also included:{" "}
+          <Link href="/custom-short-links" className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+            custom aliases
+          </Link>
+          ,{" "}
           <Link href="/help/links#edit" className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
             editing links after you make them
           </Link>

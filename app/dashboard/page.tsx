@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useMyUrls, useActivateUrl, useDeactivateUrl, useDeleteUrl } from "@/lib/hooks/useUrls"
 import { useClampedPage, usePagination } from "@/lib/hooks/usePagination"
 import { useListSearch } from "@/lib/hooks/useListSearch"
@@ -26,6 +27,7 @@ import { toast } from "sonner"
 import { cn, formatDateTime, formatRelativeDate, formatShortUrl, opensText, shortHostOf } from "@/lib/utils"
 import { urlApi } from "@/lib/api-client"
 import { analyticsHref, parseServerDateTime } from "@/lib/analytics"
+import { isAliasShaped } from "@/lib/claim"
 import { CreateUrlDialog } from "@/components/dashboard/create-url-dialog"
 import { EditLinkDialog } from "@/components/edit-link-dialog"
 import { PageMeta } from "@/components/page-meta"
@@ -80,6 +82,21 @@ function Dashboard() {
   const totalKeys = apiKeys?.length ?? 0
   const activeKeys = apiKeys?.filter(k => k.active).length ?? 0
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [claimedAlias, setClaimedAlias] = useState<string | undefined>(undefined)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const aliasParam = searchParams.get("alias")
+  const [seenAlias, setSeenAlias] = useState<string | null>(null)
+  if (aliasParam !== seenAlias) {
+    setSeenAlias(aliasParam)
+    if (aliasParam !== null && isAliasShaped(aliasParam)) {
+      setClaimedAlias(aliasParam)
+      setShowCreateDialog(true)
+    }
+  }
+  useEffect(() => {
+    if (aliasParam !== null) router.replace("/dashboard")
+  }, [aliasParam, router])
   const newUrlButtonRef = useRef<HTMLButtonElement>(null)
   const createOpenerRef = useRef<HTMLElement | null>(null)
   const [copyPulseId, setCopyPulseId] = useState<number | null>(null)
@@ -168,7 +185,12 @@ function Dashboard() {
         </div>
       </div>
 
-      <CreateUrlDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} onCloseAutoFocus={focusCreateOpener} />
+      <CreateUrlDialog
+        open={showCreateDialog}
+        onOpenChange={(open) => { setShowCreateDialog(open); if (!open) setClaimedAlias(undefined) }}
+        onCloseAutoFocus={focusCreateOpener}
+        initialAlias={claimedAlias}
+      />
       <EditLinkDialog link={editUrl} onOpenChange={(open) => { if (!open) setEditUrl(null) }} onCloseAutoFocus={focusEditOpener} />
 
       <div className="flex flex-wrap items-center gap-2">

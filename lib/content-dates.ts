@@ -19,6 +19,7 @@ export const CONTENT_UPDATED = {
   "/about": "2026-10-29",
   "/privacy-first-url-shortener": "2026-11-05",
   "/custom-domain-url-shortener": "2026-11-09",
+  "/custom-short-links": "2026-11-09",
   "/developers": "2026-11-05",
   "/qr": "2026-10-30",
   "/utm": "2026-10-30",

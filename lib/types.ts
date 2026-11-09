@@ -1336,6 +1336,14 @@ export interface SettingResponse {
   unavailableReason: string | null
 }
 
+export type AliasCheckStatus = "AVAILABLE" | "TAKEN" | "RESERVED" | "INVALID" | "DISABLED"
+
+export interface AliasCheck {
+  name: string
+  status: AliasCheckStatus
+  reason: string | null
+}
+
 export interface PublicSettings {
   anonymousLinks: boolean
   newSignups: boolean

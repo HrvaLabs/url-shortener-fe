@@ -1,7 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { Suspense, useRef, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { ApiError } from "@/lib/api-client"
+import { aliasFromNext } from "@/lib/claim"
+import { safeNext } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
 import { usePublicSettings } from "@/lib/hooks/useSettings"
 import { SIGNUPS_PAUSED, signupsPaused } from "@/lib/moderation"
@@ -17,7 +20,7 @@ import { NewPasswordInput } from "@/components/auth/new-password-input"
 import { ProviderButtons } from "@/components/auth/provider-buttons"
 import { ArrowLeft } from "lucide-react"
 
-export default function RegisterPage() {
+function RegisterForm({ next }: { next: string | null }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -27,6 +30,8 @@ export default function RegisterPage() {
   const { register } = useAuth()
   const { data: publicSettings } = usePublicSettings()
   const paused = signupsPaused(publicSettings)
+  const claimedAlias = aliasFromNext(next)
+  const nextQuery = next ? `?next=${encodeURIComponent(next)}` : ""
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -73,17 +78,22 @@ export default function RegisterPage() {
                 <div role="status" className="rounded-lg bg-success/10 p-4 text-center text-sm text-success [overflow-wrap:anywhere]">
                   Check your inbox at {sentTo} for an email from hrva.cc. It says what to do next.
                 </div>
+                {claimedAlias && (
+                  <p className="text-center text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                    Once your email is confirmed, sign in and create hrva.cc/{claimedAlias}. Nobody has it held for you until then.
+                  </p>
+                )}
                 <p className="text-center text-sm text-muted-foreground">
                   No email after a few minutes? Look in spam, or{" "}
                   <Link href="/verify-email/resend" className="font-medium text-brand hover:underline">send the verification email again</Link>.
                 </p>
                 <Button asChild variant="outline" className="w-full">
-                  <Link href="/login">Go to sign in</Link>
+                  <Link href={`/login${nextQuery}`}>Go to sign in</Link>
                 </Button>
               </div>
             ) : paused ? (
               <p className="mt-8 text-center text-sm leading-relaxed text-muted-foreground">
-                {SIGNUPS_PAUSED} <Link href="/login" className="font-medium text-brand hover:underline">Sign in</Link> if you already have an account.
+                {SIGNUPS_PAUSED} <Link href={`/login${nextQuery}`} className="font-medium text-brand hover:underline">Sign in</Link> if you already have an account.
               </p>
             ) : (
               <>
@@ -117,10 +127,10 @@ export default function RegisterPage() {
                   {loading ? "Creating account…" : "Create account"}
                 </Button>
               </form>
-              <ProviderButtons next={null} />
+              <ProviderButtons next={next} />
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link href="/login" className="font-medium text-brand hover:underline">
+                <Link href={`/login${nextQuery}`} className="font-medium text-brand hover:underline">
                   Sign in
                 </Link>
               </p>
@@ -141,5 +151,19 @@ export default function RegisterPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+function RegisterFormWithNext() {
+  const searchParams = useSearchParams()
+  const next = searchParams.get("next")
+  return <RegisterForm next={next ? safeNext(next) : null} />
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<RegisterForm next={null} />}>
+      <RegisterFormWithNext />
+    </Suspense>
   )
 }

@@ -11,7 +11,7 @@ globalThis.document = { createElement: () => ({ click() {}, appendChild() {} }),
 URL.createObjectURL = () => "blob:check"
 URL.revokeObjectURL = () => {}
 
-const { ApiError, DATABASE_UNREACHABLE, RESTART_RETRY_WINDOW_MS, SESSION_ENDED, adminApi, authApi, backendRestartingSince, isOutage, isRestartError, linkScreenshotPath, noteBackendAnswered, noteBackendFailed, onBackendRecovered, perQueryRetry, restartTooLong, onAdminTwoStepRequired, onSessionEnded, retryDelay, retryUnlessRefused, shouldRetry, urlApi, userApi, withinRestartWindow } = await import("../lib/api-client.ts")
+const { ApiError, DATABASE_UNREACHABLE, publicApi, RESTART_RETRY_WINDOW_MS, SESSION_ENDED, adminApi, authApi, backendRestartingSince, isOutage, isRestartError, linkScreenshotPath, noteBackendAnswered, noteBackendFailed, onBackendRecovered, perQueryRetry, restartTooLong, onAdminTwoStepRequired, onSessionEnded, retryDelay, retryUnlessRefused, shouldRetry, urlApi, userApi, withinRestartWindow } = await import("../lib/api-client.ts")
 const { ADMIN_TWO_STEP_REQUIRED } = await import("../lib/admin-two-step.ts")
 const { VISIT_LIMIT_HINT, opensText, shortLinkOf } = await import("../lib/utils.ts")
 
@@ -69,6 +69,17 @@ for (const [name, download, body] of downloads) {
     assert.equal(localStorage.getItem("auth-token"), "Bearer renewed")
   })
 }
+
+await check("checkAlias encodes the name, is never cached and surfaces a 429", async () => {
+  sent.length = 0
+  answer = () => new Response(JSON.stringify({ name: "a b", status: "INVALID", reason: "x" }), { headers: { "Content-Type": "application/json" } })
+  await publicApi.checkAlias("a b/c")
+  assert.match(sent[0].url, /\/public\/alias-check\?name=a%20b%2Fc$/)
+  assert.equal(sent[0].method, "GET")
+  assert.equal(sent[0].cache, "no-store")
+  answer = () => problem(429, "Too many requests")
+  await assert.rejects(publicApi.checkAlias("karlo"), (error) => error instanceof ApiError && error.status === 429)
+})
 
 await check("a page's own toast of the session-ended error joins the sign-out toast", async () => {
   const { toast } = await import("sonner")

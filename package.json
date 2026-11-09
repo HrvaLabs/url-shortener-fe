@@ -22,6 +22,7 @@
     "check:inspection": "node scripts/check-invisible.mjs && TZ=UTC node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-inspection.mjs && TZ=America/Los_Angeles node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-inspection.mjs && TZ=Pacific/Auckland node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-inspection.mjs",
     "check:system-status": "node scripts/check-invisible.mjs && TZ=UTC node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-system-status.mjs && TZ=America/Los_Angeles node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-system-status.mjs && TZ=Pacific/Auckland node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-system-status.mjs",
     "check:landing-visits": "node scripts/check-invisible.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-landing-visits.mjs",
+    "check:claim": "node scripts/check-invisible.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-claim.mjs",
     "check:worker": "node scripts/check-invisible.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-worker.mjs",
     "check:stale-chunk": "node scripts/check-invisible.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-stale-chunk.mjs",
     "check:reconnecting": "node scripts/check-invisible.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-reconnecting.mjs",

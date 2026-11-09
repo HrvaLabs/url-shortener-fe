@@ -24,11 +24,13 @@ interface CreateUrlDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onCloseAutoFocus?: (event: Event) => void
+  initialAlias?: string
 }
 
-export function CreateUrlDialog({ open, onOpenChange, onCloseAutoFocus }: CreateUrlDialogProps) {
+export function CreateUrlDialog({ open, onOpenChange, onCloseAutoFocus, initialAlias }: CreateUrlDialogProps) {
   const [longUrl, setLongUrl] = useState("")
-  const [customAlias, setCustomAlias] = useState("")
+  const [typedAlias, setTypedAlias] = useState<string | null>(null)
+  const customAlias = typedAlias ?? initialAlias ?? ""
   const [domain, setDomain] = useState<string | null>(null)
   const [domainError, setDomainError] = useState<string | null>(null)
   const [visitLimit, setVisitLimit] = useState("")
@@ -45,6 +47,12 @@ export function CreateUrlDialog({ open, onOpenChange, onCloseAutoFocus }: Create
   const showAlias = aliasFieldShown(publicSettings, domain)
   const longUrlError = destinationLengthError(longUrl)
   const id = useId()
+
+  const focusDestination = (event: Event) => {
+    if (!initialAlias) return
+    event.preventDefault()
+    document.getElementById(`${id}-long-url`)?.focus()
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -94,7 +102,7 @@ export function CreateUrlDialog({ open, onOpenChange, onCloseAutoFocus }: Create
 
   const handleClose = () => {
     setLongUrl("")
-    setCustomAlias("")
+    setTypedAlias(null)
     setDomain(null)
     setDomainError(null)
     setVisitLimit("")
@@ -111,7 +119,7 @@ export function CreateUrlDialog({ open, onOpenChange, onCloseAutoFocus }: Create
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto" onCloseAutoFocus={onCloseAutoFocus}>
+      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto" onOpenAutoFocus={focusDestination} onCloseAutoFocus={onCloseAutoFocus}>
         <DialogHeader>
           <DialogTitle>{result ? "URL Created!" : "Create Short URL"}</DialogTitle>
           {!result && <DialogDescription>Enter a long URL to shorten it.</DialogDescription>}
@@ -130,7 +138,7 @@ export function CreateUrlDialog({ open, onOpenChange, onCloseAutoFocus }: Create
                 <Label htmlFor={`${id}-alias`}>Custom alias (optional)</Label>
                 <div className="mt-2 flex min-h-10 overflow-hidden rounded-lg border border-input bg-background shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-within:border-ring focus-within:ring-4 focus-within:ring-ring/15">
                   <span className="flex min-w-0 max-w-[60%] select-none items-center border-r bg-muted/60 px-3 py-2 text-sm text-muted-foreground [overflow-wrap:anywhere]">{shortHostOf(domain)}/</span>
-                  <input id={`${id}-alias`} placeholder="my-link" value={customAlias} onChange={(e) => setCustomAlias(e.target.value)} className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-hidden placeholder:text-muted-foreground" />
+                  <input id={`${id}-alias`} placeholder="my-link" value={customAlias} onChange={(e) => setTypedAlias(e.target.value)} className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-hidden placeholder:text-muted-foreground" />
                 </div>
               </div>
             )}
