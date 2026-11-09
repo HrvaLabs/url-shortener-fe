@@ -18,6 +18,7 @@ export interface User {
   signInMethods?: SignInMethodUse[]
   possibleScammer?: boolean
   destinationChanges?: DestinationChangeStanding
+  askSignupSource?: boolean
 }
 
 /** The admin's choice for an account's destination changes on hrva.cc links. */
@@ -99,6 +100,7 @@ export interface UserDto {
   twoStepEnabled?: boolean
   passwordSet?: boolean
   signInMethods?: SignInMethodUse[]
+  askSignupSource?: boolean
 }
 
 export interface Url {

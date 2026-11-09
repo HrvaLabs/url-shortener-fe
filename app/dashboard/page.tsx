@@ -30,6 +30,7 @@ import { analyticsHref, parseServerDateTime } from "@/lib/analytics"
 import { isAliasShaped } from "@/lib/claim"
 import { CreateUrlDialog } from "@/components/dashboard/create-url-dialog"
 import { EditLinkDialog } from "@/components/edit-link-dialog"
+import { SignupSourceCard } from "@/components/dashboard/signup-source-card"
 import { PageMeta } from "@/components/page-meta"
 import { DestinationHealthBadge } from "@/components/notifications/destination-health-badge"
 import { shortHost } from "@/lib/domains"
@@ -184,6 +185,8 @@ function Dashboard() {
           </Button>
         </div>
       </div>
+
+      <SignupSourceCard />
 
       <CreateUrlDialog
         open={showCreateDialog}

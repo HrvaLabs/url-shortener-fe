@@ -1,6 +1,7 @@
 import { getApiBaseUrl } from "./utils"
 import { ADMIN_TWO_STEP_REQUIRED } from "./admin-two-step"
 import type { AliasCheck, UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, ApiKeyExpiry, ApiKeyCreated, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse, UrlFilters, UserFilters, AuditLog, EmailLog, AnalyticsOverview, AnalyticsRange, UrlAnalytics, ConnectRequestView, ConnectApproval, ConnectDenial, ConnectedApp, BlocklistSource, BlocklistSourceInput, DomainRule, DomainRuleType, DomainRuleInput, DomainRuleCreated, DomainBlockPreview, DomainBulkBlockResult, LinksAffected, ReviewEntry, ReviewQueueFilters, ReviewAction, ReviewBulkResolveResult, UrlCheckResult, LinkReport, TrafficStats, LinksStats, UsersStats, SafetyStats, SystemStats, ReservedAlias, ReservedAliasInput, LoginResponse, SignedIn, PasskeyOptions, CreationOptionsJSON, RequestOptionsJSON, RegistrationCredentialJSON, AssertionCredentialJSON, Passkey, SignInMethod, SignInMethodsResponse, TwoStepStatus, PublicStatsResponse, BioPage, BioPageUpdate, BioHandleAvailability, BioPageAnalytics, AdminBioPage, BioPageReviewEntry, BioPageReviewAction, ApiKeysDeleted, EmailNotificationType, NotificationConsent, NotificationChannel, NotificationChannelInput, ChannelTestResult, UnsubscribeResult, CustomDomain, MyDomains, DomainRemoval, DomainLinkMode, AdminDomain, AdminDomainFilters, DomainSummary, CloudflareCheck, DomainReconcile, DomainAllowance, DomainRequest, AdminDomainRequest, AdminDomainRequestFilters, ApiKeyFilters, AuditLogFilters, EmailLogFilters, LoginAttempt, Campaign, CampaignAllowed, CampaignDetail, CampaignLink, AbuseReportSource, AbuseReportResponse, SettingKey, SettingResponse, SettingValue, PublicSettings, DestinationChangeInfo, DestinationChangeStanding, DestinationChangeOverride, LinkDestinationChange, LinkInspection, VirusTotalView, SystemStatus } from "./types"
+import type { SignupSource } from "./signup-source"
 
 export const REQUEST_FAILED = "Request failed"
 
@@ -508,6 +509,8 @@ export const apiKeyApi = {
 export const userApi = {
   getMe: () =>
     request<UserDto>("GET", "/users/me"),
+  setSignupSource: (source: SignupSource) =>
+    request<void>("PUT", "/users/me/signup-source", { source }),
   renewSession: () =>
     request<Record<string, never>>("POST", "/users/me/sessions/renew"),
   getAll: (filters: UserFilters = {}, page = 0, size = 20, sort?: string, order?: string) => {
