@@ -150,7 +150,7 @@ export default function PrivacyPage() {
               </p>
               <p>
                 Legal basis: legitimate interest (Art. 6(1)(f) GDPR) — seeing which sites send visitors
-                to hrva.cc. Only totals are kept, with nothing that identifies a visitor.
+                to hrva.cc. Each point holds only the source, the kind of source, the page and the time, with nothing that identifies a visitor, and the admin sees only totals.
               </p>
 
               <h3>Bio pages</h3>
