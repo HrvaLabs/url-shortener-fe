@@ -8,16 +8,16 @@ import { AuthProvider } from "@/lib/auth-context"
 import { ReconnectingNotice } from "@/components/reconnecting-notice"
 import { trackMutation, trackQuery } from "@/lib/reconnecting"
 import { EM_DASH, SLOGAN } from "@/lib/seo"
-import { reloadIfStaleChunkError } from "@/lib/stale-chunk"
+import { recoverFromBackgroundChunkError } from "@/lib/stale-chunk"
 import { useState, useEffect, type ReactNode } from "react"
 
-const reloadUnlessApiError = (error: Error) => {
-  if (!(error instanceof ApiError)) reloadIfStaleChunkError(error)
+const recoverUnlessApiError = (error: Error) => {
+  if (!(error instanceof ApiError)) recoverFromBackgroundChunkError(error)
 }
 
 const createQueryClient = () => {
-  const queryCache = new QueryCache({ onError: reloadUnlessApiError })
-  const mutationCache = new MutationCache({ onError: reloadUnlessApiError })
+  const queryCache = new QueryCache({ onError: recoverUnlessApiError })
+  const mutationCache = new MutationCache({ onError: recoverUnlessApiError })
   queryCache.subscribe(trackQuery)
   mutationCache.subscribe(trackMutation(mutationCache))
   const client = new QueryClient({

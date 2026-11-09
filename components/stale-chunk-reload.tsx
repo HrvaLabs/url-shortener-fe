@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { isStaleChunkElement, reloadForStaleChunk, reloadIfStaleChunkError } from "@/lib/stale-chunk"
+import { isStaleChunkElement, recoverFromBackgroundChunkError, recoverInBackground } from "@/lib/stale-chunk"
 
 const isEditing = () => {
   const active = document.activeElement
@@ -13,7 +13,7 @@ export function StaleChunkReload() {
   useEffect(() => {
     const onError = (event: Event) => {
       if (event instanceof ErrorEvent) {
-        reloadIfStaleChunkError(event.error)
+        recoverFromBackgroundChunkError(event.error)
         return
       }
       const target = event.target
@@ -21,10 +21,11 @@ export function StaleChunkReload() {
       const element = target instanceof HTMLScriptElement
         ? { tagName: target.tagName, src: target.src }
         : { tagName: target.tagName, href: target.href, rel: target.rel }
-      if (isStaleChunkElement(element, window.location.origin) && !isEditing()) reloadForStaleChunk()
+      if (!isStaleChunkElement(element, window.location.origin)) return
+      recoverInBackground(target instanceof HTMLScriptElement ? target.src : target.href, () => !isEditing())
     }
     const onRejection = (event: PromiseRejectionEvent) => {
-      reloadIfStaleChunkError(event.reason)
+      recoverFromBackgroundChunkError(event.reason)
     }
 
     window.addEventListener("error", onError, true)

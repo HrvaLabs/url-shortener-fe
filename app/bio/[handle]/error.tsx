@@ -4,15 +4,15 @@ import { useEffect } from "react"
 import { useParams } from "next/navigation"
 import { normalizeHandle } from "@/lib/bio"
 import { clearPageRetry, markPageRetry } from "@/lib/hooks/useFocusAfterRetry"
-import { reloadIfStaleChunkError } from "@/lib/stale-chunk"
+import { useChunkErrorRecovery } from "@/lib/hooks/useChunkErrorRecovery"
 
 export default function BioPageError({ error, retry }: { error: unknown; retry: () => void }) {
   const { handle } = useParams<{ handle: string }>()
 
   useEffect(() => {
     clearPageRetry()
-    reloadIfStaleChunkError(error)
   }, [error])
+  useChunkErrorRecovery(error, retry)
 
   return (
     <div className="bio-public bio-theme-auto flex min-h-dvh w-full flex-col">
