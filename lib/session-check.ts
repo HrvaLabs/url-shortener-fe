@@ -1,4 +1,6 @@
-import { SESSION_ENDED } from "./api-client"
+import { SESSION_ENDED, tokenExpired } from "./api-client"
+
+export { tokenExpired }
 
 export type RefusalAnswer = "sign-out" | "wait"
 
@@ -10,21 +12,6 @@ export const RENEW_EVERY_MS = 5 * 60 * 1000
 
 /** True when activity should renew the sign-in: never renewed in this tab yet, or the last renewal is 5 minutes old. */
 export const dueForRenewal = (lastRenewedAt: number | null, now: number): boolean => lastRenewedAt === null || now - lastRenewedAt >= RENEW_EVERY_MS
-
-const MILLISECONDS_PER_SECOND = 1000
-
-/** True when the stored token's `exp` has passed, or when the token can't be read; the signature isn't checked. */
-export function tokenExpired(token: string | null, now: number): boolean {
-  const payload = token?.replace(/^Bearer\s+/i, "").split(".")[1]
-  if (!payload) return true
-  try {
-    const claims: unknown = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")))
-    const exp = typeof claims === "object" && claims !== null ? (claims as { exp?: unknown }).exp : undefined
-    return typeof exp !== "number" || exp * MILLISECONDS_PER_SECOND <= now
-  } catch {
-    return true
-  }
-}
 
 /**
  * What a 401 or 403 from `/users/me` means: a session ended elsewhere, an expired or unreadable token, or a second refusal in a row

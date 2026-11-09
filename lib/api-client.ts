@@ -36,10 +36,28 @@ function keepRenewedToken(sentToken: string | null, response: Response) {
   }
 }
 
-function endedSession(sentToken: string | null, status: number, message: string) {
-  if (status !== 401 || message !== SESSION_ENDED || !sentToken || localStorage.getItem(TOKEN_KEY) !== sentToken) return
+const MILLISECONDS_PER_SECOND = 1000
+
+/** True when the stored token's `exp` has passed, or when the token can't be read; the signature isn't checked. */
+export function tokenExpired(token: string | null, now: number): boolean {
+  const payload = token?.replace(/^Bearer\s+/i, "").split(".")[1]
+  if (!payload) return true
+  try {
+    const claims: unknown = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")))
+    const exp = typeof claims === "object" && claims !== null ? (claims as { exp?: unknown }).exp : undefined
+    return typeof exp !== "number" || exp * MILLISECONDS_PER_SECOND <= now
+  } catch {
+    return true
+  }
+}
+
+/** A 401 for the token still stored that says the session ended, or whose token has expired, signs out; true when it did. */
+function endedSession(sentToken: string | null, status: number, message: string): boolean {
+  if (status !== 401 || !sentToken || localStorage.getItem(TOKEN_KEY) !== sentToken) return false
+  if (message !== SESSION_ENDED && !tokenExpired(sentToken, Date.now())) return false
   localStorage.removeItem(TOKEN_KEY)
-  sessionEndedListener?.(message)
+  sessionEndedListener?.(SESSION_ENDED)
+  return true
 }
 
 export class ApiError extends Error {
@@ -296,9 +314,9 @@ async function request<T>(
     const errorBody = await readBody(response).catch(() => undefined)
     const message = errorMessage(errorBody, response.status)
     noteAnswer(startedAt, response.status, problemMembers(errorBody), token !== null)
-    endedSession(token, response.status, message)
+    const ended = endedSession(token, response.status, message)
     adminTwoStepRequired(response.status, message)
-    throw new ApiError(message, response.status, validationFields(errorBody), problemMembers(errorBody))
+    throw new ApiError(ended ? SESSION_ENDED : message, response.status, validationFields(errorBody), problemMembers(errorBody))
   }
 
   noteBackendAnswered(token !== null)
@@ -337,9 +355,9 @@ async function download(path: string, cache?: RequestCache): Promise<Response> {
     const errorBody = await readBody(response).catch(() => undefined)
     const message = errorMessage(errorBody, response.status)
     noteAnswer(startedAt, response.status, problemMembers(errorBody), token !== null)
-    endedSession(token, response.status, message)
+    const ended = endedSession(token, response.status, message)
     adminTwoStepRequired(response.status, message)
-    throw new ApiError(message, response.status, validationFields(errorBody), problemMembers(errorBody))
+    throw new ApiError(ended ? SESSION_ENDED : message, response.status, validationFields(errorBody), problemMembers(errorBody))
   }
 
   noteBackendAnswered(token !== null)

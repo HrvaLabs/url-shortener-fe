@@ -41,6 +41,82 @@ const downloads = [
   ["adminApi.exportUrlsCsv", () => adminApi.exportUrlsCsv(), "id,shortUrl\n"],
 ]
 
+const SIGN_IN_TO_CONTINUE = "Sign in to continue."
+const base64url = (value) => Buffer.from(JSON.stringify(value)).toString("base64url")
+const jwt = (expiresAt) => `Bearer ${base64url({ alg: "HS512" })}.${base64url({ sub: "ana@hrva.cc", exp: Math.floor(expiresAt / 1000) })}.signature`
+const expiredToken = () => jwt(Date.now() - 60_000)
+const liveToken = () => jwt(Date.now() + 3_600_000)
+
+const listCalls = [
+  ["urlApi.getMyUrls", () => urlApi.getMyUrls()],
+  ["userApi.getMe", () => userApi.getMe()],
+  ["userApi.renewSession", () => userApi.renewSession()],
+]
+
+for (const [name, call] of [...listCalls, ...downloads]) {
+  await check(`${name} ends the session on a 401 for a stored token that has expired`, async () => {
+    stored.set("auth-token", expiredToken())
+    const heard = []
+    onSessionEnded((message) => heard.push(message))
+    answer = () => problem(401, SIGN_IN_TO_CONTINUE)
+    await assert.rejects(call(), (error) => error instanceof ApiError && error.status === 401 && error.message === SESSION_ENDED)
+    assert.equal(localStorage.getItem("auth-token"), null)
+    assert.deepEqual(heard, [SESSION_ENDED])
+    onSessionEnded(null)
+  })
+
+  await check(`${name} keeps a token that hasn't expired on a single 401`, async () => {
+    const live = liveToken()
+    stored.set("auth-token", live)
+    const heard = []
+    onSessionEnded((message) => heard.push(message))
+    answer = () => problem(401, SIGN_IN_TO_CONTINUE)
+    await assert.rejects(call(), (error) => error instanceof ApiError && error.status === 401 && error.message === SIGN_IN_TO_CONTINUE)
+    assert.equal(localStorage.getItem("auth-token"), live)
+    assert.deepEqual(heard, [])
+    onSessionEnded(null)
+  })
+}
+
+await check("an expired token replaced while the call ran is not signed out", async () => {
+  const live = liveToken()
+  stored.set("auth-token", expiredToken())
+  const heard = []
+  onSessionEnded((message) => heard.push(message))
+  answer = () => {
+    stored.set("auth-token", live)
+    return problem(401, SIGN_IN_TO_CONTINUE)
+  }
+  await assert.rejects(urlApi.getMyUrls(), (error) => error.status === 401 && error.message === SIGN_IN_TO_CONTINUE)
+  assert.equal(localStorage.getItem("auth-token"), live)
+  assert.deepEqual(heard, [])
+  onSessionEnded(null)
+})
+
+await check("an expired token is only signed out on a 401", async () => {
+  const expired = expiredToken()
+  const heard = []
+  onSessionEnded((message) => heard.push(message))
+  for (const status of [400, 403, 404, 429, 500]) {
+    stored.set("auth-token", expired)
+    answer = () => problem(status, "Nope")
+    await assert.rejects(urlApi.getMyUrls(), (error) => error.status === status)
+    assert.equal(localStorage.getItem("auth-token"), expired, String(status))
+  }
+  assert.deepEqual(heard, [])
+  onSessionEnded(null)
+})
+
+await check("a 401 without a stored token ends no session", async () => {
+  stored.delete("auth-token")
+  const heard = []
+  onSessionEnded((message) => heard.push(message))
+  answer = () => problem(401, SIGN_IN_TO_CONTINUE)
+  await assert.rejects(urlApi.getMyUrls(), (error) => error.status === 401 && error.message === SIGN_IN_TO_CONTINUE)
+  assert.deepEqual(heard, [])
+  onSessionEnded(null)
+})
+
 for (const [name, download, body] of downloads) {
   await check(`${name} signs out when the session ended elsewhere`, async () => {
     stored.set("auth-token", "Bearer ended")
