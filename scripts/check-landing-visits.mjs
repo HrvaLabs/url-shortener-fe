@@ -126,7 +126,9 @@ await check("otherHostsAreSkipped", () => {
 await check("aMissingBindingIsIgnored", () => {
   const visit = { source: "direct", kind: "direct", page: "/" }
   assert.doesNotThrow(() => writeLandingVisit(undefined, visit))
-  assert.doesNotThrow(() => writeLandingVisit({ writeDataPoint: () => assert.fail("must not write") }, null))
+  const points = []
+  writeLandingVisit({ writeDataPoint: (point) => points.push(point) }, null)
+  assert.deepEqual(points, [])
 })
 
 await check("aFailingDatasetNeverBreaksTheResponse", () => {
