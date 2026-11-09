@@ -64,7 +64,7 @@ function VisitsTable({ name, firstColumn, rows }: VisitsTableProps) {
         {rows.map((row) => (
           <TableRow key={row.key}>
             <TableCell className="min-w-0 [overflow-wrap:anywhere]">{row.value}</TableCell>
-            {showKind && <TableCell className="text-muted-foreground [overflow-wrap:anywhere]">{row.kind}</TableCell>}
+            {showKind && <TableCell className="min-w-24 break-words text-muted-foreground">{row.kind}</TableCell>}
             <TableCell className="text-right tabular-nums">{row.visits.toLocaleString()}</TableCell>
           </TableRow>
         ))}

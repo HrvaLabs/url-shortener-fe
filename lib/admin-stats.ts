@@ -26,9 +26,9 @@ export const createdViaLabels: Record<CreatedVia | "unknown", string> = {
 }
 
 export const visitKindLabels: Record<VisitKind, string> = {
-  utm: "From a link tag",
+  utm: "From a utm_source tag",
   referrer: "From the page before",
-  direct: "Typed or bookmarked",
+  direct: "No referrer or tag",
 }
 
 export type SignInProvider = "local" | "google" | "github"

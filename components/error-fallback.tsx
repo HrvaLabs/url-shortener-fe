@@ -7,8 +7,15 @@ export function errorReference(error: unknown): string | null {
   return typeof digest === "string" && digest ? digest : null
 }
 
+export function errorSummary(error: unknown): string | null {
+  if (!(error instanceof Error)) return null
+  const message = error.message.replace(/\s+/g, " ").trim().slice(0, 120)
+  return message ? `${error.name}: ${message}` : error.name || null
+}
+
 export function ErrorFallback({ error, retry }: { error: unknown; retry: () => void }) {
   const reference = errorReference(error)
+  const summary = reference ? null : errorSummary(error)
 
   return (
     <div className="text-center">
@@ -21,6 +28,9 @@ export function ErrorFallback({ error, retry }: { error: unknown; retry: () => v
         <p className="mx-auto mt-3 max-w-md text-xs text-muted-foreground [overflow-wrap:anywhere]">
           Reference: <span className="font-mono">{reference}</span>
         </p>
+      )}
+      {summary && (
+        <p className="mx-auto mt-3 max-w-md font-mono text-xs text-muted-foreground [overflow-wrap:anywhere]">{summary}</p>
       )}
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Button type="button" onClick={() => retry()}>Try again</Button>
