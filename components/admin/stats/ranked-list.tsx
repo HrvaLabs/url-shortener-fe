@@ -5,7 +5,7 @@ interface RankedListProps {
   valueLabel: string
   entries: CountEntry[]
   label?: (value: string) => string
-  emptyText: string
+  emptyText?: string
   note?: string
 }
 
