@@ -8,7 +8,7 @@ Shortening works without an account. A free account adds custom aliases, editing
 - Author: Karlo Hrvačić (https://karlo.cc)
 - Contact: privacy@hrvalabs.net
 - Licence: GPL-3.0 (both the backend and the frontend repository)
-- AI crawlers: AI search and assistant fetchers (OAI-SearchBot, ChatGPT-User, PerplexityBot, Perplexity-User, Claude-SearchBot, Claude-User) may read the public pages. Training crawlers (GPTBot, ClaudeBot, anthropic-ai, CCBot, Google-Extended, Applebot-Extended, Bytespider, meta-externalagent) are disallowed in https://app.hrva.cc/robots.txt
+- AI crawlers: AI search and assistant fetchers and AI training crawlers may read the public pages. Only Bytespider is disallowed, and the private paths (/dashboard/, /admin/, /api/, /egg, /connect) are disallowed for everyone in https://app.hrva.cc/robots.txt
 - Short links live at https://hrva.cc/<alias>; the web app is https://app.hrva.cc/
 
 ## Use hrva.cc from AI assistants and code
