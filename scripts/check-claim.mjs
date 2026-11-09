@@ -16,7 +16,7 @@ const check = async (name, run) => {
 }
 
 await check("aPastedShortLinkIsReducedToTheName", () => {
-  for (const pasted of ["https://hrva.cc/karlo/", "hrva.cc/karlo", " karlo ", "http://www.hrva.cc/karlo", "www.hrva.cc/karlo", "karlo/", "HTTPS://hrva.cc/Karlo"]) {
+  for (const pasted of ["https://hrva.cc/karlo/", "hrva.cc/karlo", " karlo ", "http://www.hrva.cc/karlo", "www.hrva.cc/karlo", "karlo/", "HTTPS://hrva.cc/Karlo", "hrva.cc/karlo?x=1", "https://hrva.cc/karlo#top", "app.hrva.cc/karlo", "https://app.hrva.cc/karlo/?a=b#c"]) {
     assert.equal(aliasFromInput(pasted).toLowerCase(), "karlo", pasted)
   }
   assert.equal(aliasFromInput("HTTPS://hrva.cc/Karlo"), "Karlo")

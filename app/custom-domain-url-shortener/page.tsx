@@ -54,12 +54,12 @@ export default function CustomDomainUrlShortenerPage() {
         <h2 id="what-you-get">What you get</h2>
         <p>
           A link made on your domain opens at your domain. If your domain is go.example.com and you pick the alias{" "}
-          <code>menu</code>, the short link is <code className="[overflow-wrap:anywhere]">go.example.com/menu</code>.
+          <code className="[overflow-wrap:anywhere]">menu</code>, the short link is <code className="[overflow-wrap:anywhere]">go.example.com/menu</code>.
         </p>
         <ul>
           <li>Stats, visit limits, passwords, expiry, QR codes and the safety checks work the same as on hrva.cc.</li>
           <li>A QR code made for the link opens your domain.</li>
-          <li>You can create links on your domain from the web app or, with the API, by sending the domain&apos;s name as <code>domain</code>.</li>
+          <li>You can create links on your domain from the web app or, with the API, by sending the domain&apos;s name as <code className="[overflow-wrap:anywhere]">domain</code>.</li>
           <li>Visitors get the same privacy as on hrva.cc: daily counts only, and their IP addresses are never stored.</li>
         </ul>
 
@@ -75,8 +75,8 @@ export default function CustomDomainUrlShortenerPage() {
           </li>
           <li>
             Once it is approved, add one CNAME record at the company that manages your domain&apos;s DNS. The type is{" "}
-            <code>CNAME</code>, the name is your subdomain, such as <code>go</code>, and the target is{" "}
-            <code>domains.hrva.cc</code>.
+            <code className="[overflow-wrap:anywhere]">CNAME</code>, the name is your subdomain, such as <code className="[overflow-wrap:anywhere]">go</code>, and the target is{" "}
+            <code className="[overflow-wrap:anywhere]">domains.hrva.cc</code>.
           </li>
           <li>
             hrva.cc looks for the record by itself: every minute for the first hour after approval, every 10 minutes

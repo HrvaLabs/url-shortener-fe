@@ -19,9 +19,10 @@ const FALLBACKS: Record<AliasCheckStatus, string> = {
 export const aliasFromInput = (raw: string): string =>
   raw
     .trim()
+    .replace(/[?#].*$/, "")
     .replace(/^[a-z][a-z0-9+.-]*:\/\//i, "")
     .replace(/^www\./i, "")
-    .replace(/^hrva\.cc\//i, "")
+    .replace(/^(?:app\.)?hrva\.cc\//i, "")
     .replace(/\/+$/, "")
 
 export const isAliasShaped = (name: string): boolean => ALIAS_PATTERN.test(name)
@@ -39,7 +40,7 @@ export const aliasFromNext = (next: string | null): string | null => {
 export const rulesLineNeeded = (text: string): boolean => text !== CLAIM_RULES
 
 export const claimMessage = (status: string, reason: string | null): { tone: "ok" | "no"; text: string } => {
-  const known = status in FALLBACKS ? FALLBACKS[status as AliasCheckStatus] : null
+  const known = Object.hasOwn(FALLBACKS, status) ? FALLBACKS[status as AliasCheckStatus] : null
   if (status === "AVAILABLE") return { tone: "ok", text: known ?? FALLBACKS.AVAILABLE }
   return { tone: "no", text: reason || known || "This name can't be used. Try another." }
 }

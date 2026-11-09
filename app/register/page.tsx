@@ -157,7 +157,9 @@ function RegisterForm({ next }: { next: string | null }) {
 function RegisterFormWithNext() {
   const searchParams = useSearchParams()
   const next = searchParams.get("next")
-  return <RegisterForm next={next ? safeNext(next) : null} />
+  const safe = next ? safeNext(next) : null
+  const rejected = safe === "/dashboard" && next !== "/dashboard"
+  return <RegisterForm next={rejected ? null : safe} />
 }
 
 export default function RegisterPage() {

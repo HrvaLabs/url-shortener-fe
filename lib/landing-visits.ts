@@ -80,6 +80,6 @@ export const writeLandingVisit = (dataset: LandingDataset | undefined, visit: La
   try {
     dataset.writeDataPoint({ blobs: [visit.source, visit.kind, visit.page], doubles: [1], indexes: [visit.kind] })
   } catch {
-    return
+    console.warn("Landing visit not written")
   }
 }
