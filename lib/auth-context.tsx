@@ -156,7 +156,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLogoutDestination(null)
     setUnavailable(null)
     setUser(signedIn.user)
-  }, [queryClient])
+    void refreshUser()
+  }, [queryClient, refreshUser])
 
   const login = useCallback(async (email: string, password: string, rememberMe?: boolean): Promise<LoginResult> => {
     const response = await authApi.login({ email, password, rememberMe })
