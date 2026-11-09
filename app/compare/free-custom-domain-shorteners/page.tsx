@@ -11,7 +11,7 @@ import { absoluteUrl, pageMetadata } from "@/lib/seo"
 const { path, published, checkedOn, sources } = FREE_PLANS_COMPARISON
 const title = "Free URL shorteners with custom domains compared"
 const description =
-  "What the free plans of hrva.cc, Dub, Short.io, Bitly and Rebrandly include: custom domains, links, click tracking, ads and open source, read from each vendor's own pricing page."
+  "What hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly include: custom domains, links, click tracking, ads and open source, read from each vendor's own pricing page."
 
 export const metadata: Metadata = {
   ...pageMetadata({ title, description, path }),
