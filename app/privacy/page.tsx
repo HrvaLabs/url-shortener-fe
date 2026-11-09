@@ -83,7 +83,7 @@ export default function PrivacyPage() {
 
               <h3 id="signup-question">The sign-up question</h3>
               <p>
-                Shortly after you sign up, the dashboard may ask &quot;How did you find hrva.cc?&quot;
+                The dashboard may ask &quot;How did you find hrva.cc?&quot;
                 You can pick one of a fixed list of answers (an AI assistant, a search engine, an
                 hrva.cc link or bio page someone shared, someone recommended it, a website, list or
                 directory, or something else) or skip. It is optional, and skipping changes nothing

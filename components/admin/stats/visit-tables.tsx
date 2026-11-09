@@ -150,7 +150,8 @@ export function SignupSources({ entries }: SignupSourcesProps) {
   const rows: CountEntry[] = SIGNUP_ANSWER_ORDER.map((value) => ({ value, count: counts.get(value) ?? 0 }))
   return (
     <RankedList
-      title="How new accounts found hrva.cc"
+      title="How accounts found hrva.cc"
+      note="All answers so far, not limited to the selected period."
       valueLabel="Accounts"
       entries={rows}
       label={(value) => SIGNUP_ANSWER_LABELS[value as SignupSource] ?? value}

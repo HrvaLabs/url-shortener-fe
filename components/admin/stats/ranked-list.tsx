@@ -6,9 +6,10 @@ interface RankedListProps {
   entries: CountEntry[]
   label?: (value: string) => string
   emptyText: string
+  note?: string
 }
 
-export function RankedList({ title, valueLabel, entries, label, emptyText }: RankedListProps) {
+export function RankedList({ title, valueLabel, entries, label, emptyText, note }: RankedListProps) {
   const largest = Math.max(1, ...entries.map((entry) => entry.count))
 
   return (
@@ -17,6 +18,7 @@ export function RankedList({ title, valueLabel, entries, label, emptyText }: Ran
         <h2 className="text-sm font-semibold">{title}</h2>
         <span className="text-xs text-muted-foreground">{valueLabel}</span>
       </div>
+      {note ? <p className="border-b px-5 py-2 text-xs text-muted-foreground">{note}</p> : null}
       {entries.length === 0 ? (
         <p className="px-5 py-8 text-center text-sm text-muted-foreground">{emptyText}</p>
       ) : (
