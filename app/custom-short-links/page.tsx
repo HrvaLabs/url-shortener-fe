@@ -43,7 +43,7 @@ export default function CustomShortLinksPage() {
         <h2 id="rules">The rules</h2>
         <ul>
           <li>1 to 32 letters, numbers, hyphens or underscores.</li>
-          <li>Capital letters don&apos;t make a new name. Karlo and karlo are the same name, so only one of them can exist.</li>
+          <li>Capital letters don&apos;t make a new name: once hrva.cc/karlo exists, Karlo and KARLO are taken too. Opening a link still needs the exact letters, so share it as you created it.</li>
           <li>Names that contain a brand name are refused.</li>
           <li>Some names are reserved for the site itself.</li>
         </ul>

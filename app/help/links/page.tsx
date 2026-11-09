@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { HelpBreadcrumbs } from "@/components/json-ld"
 import { pageMetadata } from "@/lib/seo"
 
-const description = "How random aliases, editing links, turning them back on, changing where they point, links being checked, visit limits, query strings and API keys work on hrva.cc."
+const description = "How random aliases, choosing your own alias, editing links, turning them back on, changing where they point, links being checked, visit limits, query strings and API keys work on hrva.cc."
 
 export const metadata: Metadata = pageMetadata({ title: "Short links and API keys", description, path: "/help/links" })
 
@@ -27,7 +27,8 @@ export default function LinksHelpPage() {
               <p>
                 When you don&apos;t choose an alias, hrva.cc picks one from letters and digits without 0, O, 1, l and
                 I, so it&apos;s easier to read out and type. Aliases are case-sensitive: hrva.cc/Ab3 and hrva.cc/ab3 are
-                different links. Links made before this rule keep their aliases.
+                different links. A new random alias never differs from an existing one only by case. Links made before this
+                rule keep their aliases.
               </p>
 
               <h2 id="custom-aliases">Choosing your own alias</h2>
@@ -38,8 +39,8 @@ export default function LinksHelpPage() {
               <ul>
                 <li>An alias has 1 to 32 letters, numbers, hyphens or underscores.</li>
                 <li>
-                  Capital letters don&apos;t make a new name: hrva.cc/Menu and hrva.cc/menu are the same name, so once one
-                  exists the other is taken. A random alias is still case-sensitive, as described above.
+                  Capital letters don&apos;t make a new name: once hrva.cc/menu exists, Menu and MENU are taken too. Opening a
+                  link still needs the exact letters, so share it as you created it.
                 </li>
                 <li>
                   A name that contains a brand name is refused, and some names are reserved for the site itself. Try another

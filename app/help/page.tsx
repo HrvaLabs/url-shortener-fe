@@ -15,7 +15,7 @@ const guides = [
   {
     href: "/help/links",
     title: "Short links and API keys",
-    description: "How random aliases, editing links, turning them back on, changing where they point, links being checked, visit limits, query strings and API keys work.",
+    description: "How random aliases, choosing your own alias, editing links, turning them back on, changing where they point, links being checked, visit limits, query strings and API keys work.",
   },
   {
     href: "/help/utm",
