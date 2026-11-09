@@ -3,9 +3,12 @@ import { cn } from "@/lib/utils"
 
 export type Verdict = "yes" | "no" | "unknown"
 
-export interface VerdictCellProps {
+export interface Cell {
   verdict: Verdict
   note?: string
+}
+
+export interface VerdictCellProps extends Cell {
   children?: ReactNode
 }
 
@@ -30,7 +33,7 @@ const VerdictIcon = ({ verdict }: { verdict: Exclude<Verdict, "unknown"> }) => (
 export const VerdictCell = ({ verdict, note, children }: VerdictCellProps) => (
   <>
     {verdict === "unknown" ? (
-      <span className="text-muted-foreground">Not stated</span>
+      <span className="text-muted-foreground">{note ? "Not stated." : "Not stated"}</span>
     ) : (
       <span className="font-semibold">
         <VerdictIcon verdict={verdict} />

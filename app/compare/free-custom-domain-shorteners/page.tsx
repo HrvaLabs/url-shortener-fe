@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { JSON_LD_IDS, JsonLdScript, pageBreadcrumbs, reference } from "@/components/json-ld"
-import { VerdictCell, type Verdict } from "@/components/compare/verdict-cell"
+import { VerdictCell, type Cell } from "@/components/compare/verdict-cell"
 import { StaticPage } from "@/components/static-page"
 import { Button } from "@/components/ui/button"
 import { FREE_PLANS_COMPARISON } from "@/lib/comparisons"
@@ -38,11 +38,6 @@ const comparisonJsonLd = {
 
 type Vendor = keyof typeof sources
 
-interface Cell {
-  verdict: Verdict
-  note?: string
-}
-
 interface Row {
   feature: string
   hrva: Cell
@@ -51,6 +46,7 @@ interface Row {
   bitly: Cell
   rebrandly: Cell
   sources: Record<Vendor, string>
+  links?: Partial<Record<Vendor, { url: string; label: string }>>
 }
 
 const rows: Row[] = [
@@ -78,7 +74,7 @@ const rows: Row[] = [
     },
   },
   {
-    feature: "Links without a monthly cap",
+    feature: "Links without a monthly or total cap",
     hrva: { verdict: "yes", note: "Up to 60 links an hour per account." },
     dub: { verdict: "no", note: "25 new links a month." },
     shortio: {
@@ -102,12 +98,15 @@ const rows: Row[] = [
       verdict: "yes",
       note: "50,000 tracked clicks a month. Redirects are unlimited, and the FAQ says detailed statistics are viewable for the first 50,000 clicks.",
     },
-    bitly: { verdict: "yes", note: "Unlimited clicks and QR code scans." },
+    bitly: {
+      verdict: "no",
+      note: "Unlimited clicks and QR code scans, but historic performance data starts at the Core plan, with 30 days.",
+    },
     rebrandly: { verdict: "yes", note: "Unlimited clicks and QR code scans. Engagement data covers 100 clicks a month." },
     sources: {
       dub: "Free plan card",
       shortio: "Free column, Tracked clicks and FAQ",
-      bitly: "Free plan card",
+      bitly: "Detailed comparison, Data History",
       rebrandly: "Free plan card and Engagement data",
     },
   },
@@ -131,12 +130,16 @@ const rows: Row[] = [
   {
     feature: "Open source",
     hrva: { verdict: "yes", note: "Under the GPL-3.0 licence." },
-    dub: { verdict: "unknown" },
+    dub: {
+      verdict: "yes",
+      note: "The core is under the AGPLv3 licence. A small part, the /ee Enterprise Edition folder, is under a commercial licence.",
+    },
     shortio: { verdict: "unknown" },
     bitly: { verdict: "unknown" },
     rebrandly: { verdict: "unknown" },
+    links: { dub: { url: "https://github.com/dubinc/dub", label: "Dub on GitHub" } },
     sources: {
-      dub: "Whole page",
+      dub: "License section",
       shortio: "Whole page",
       bitly: "Whole page",
       rebrandly: "Whole page",
@@ -180,7 +183,7 @@ export default function FreeCustomDomainShortenersPage() {
           . They may have changed since.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          A tick means the plan has it, or does it the way a reader would want. A cross means it does not. A note gives the figure or the condition.
+          A tick means the free plan has it. A cross means it does not. A note gives the figure or the condition. Not stated means the vendor&apos;s page does not say.
         </p>
         <table role="table" aria-labelledby="free-plans-heading" className="mt-5 block w-full text-sm lg:table">
           <thead role="rowgroup" className="hidden lg:table-header-group">
@@ -206,8 +209,8 @@ export default function FreeCustomDomainShortenersPage() {
                   <td key={key} role="cell" className="block break-words py-1 leading-relaxed lg:table-cell lg:py-3 lg:pr-4 lg:align-top">
                     <span className="font-medium text-muted-foreground lg:hidden">{name} Free: </span>
                     <VerdictCell {...row[key]}>
-                      <a href={sources[key]} className="text-xs text-brand-link">
-                        {name} pricing
+                      <a href={row.links?.[key]?.url ?? sources[key]} className="text-xs text-brand-link">
+                        {row.links?.[key]?.label ?? `${name} pricing`}
                       </a>
                       <span className="text-xs text-muted-foreground"> ({row.sources[key]})</span>
                     </VerdictCell>

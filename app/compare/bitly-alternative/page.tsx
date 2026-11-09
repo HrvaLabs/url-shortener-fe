@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { JSON_LD_IDS, JsonLdScript, pageBreadcrumbs, reference } from "@/components/json-ld"
-import { VerdictCell, type Verdict } from "@/components/compare/verdict-cell"
+import { VerdictCell, type Cell } from "@/components/compare/verdict-cell"
 import { StaticPage } from "@/components/static-page"
 import { Button } from "@/components/ui/button"
 import { BITLY_COMPARISON } from "@/lib/comparisons"
@@ -38,11 +38,6 @@ const comparisonJsonLd = {
 
 type Source = keyof typeof sources
 
-interface Cell {
-  verdict: Verdict
-  note?: string
-}
-
 interface Row {
   feature: string
   hrva: Cell
@@ -52,7 +47,7 @@ interface Row {
 
 const rows: Row[] = [
   {
-    feature: "No paid plan needed",
+    feature: "No paid plans",
     hrva: { verdict: "yes", note: "Free. There are no paid plans." },
     bitly: { verdict: "no", note: "Free plan at $0. Paid plans start at $10 a month, billed annually ($120 a year)." },
     source: "pricing",
@@ -64,7 +59,7 @@ const rows: Row[] = [
     source: "pricing",
   },
   {
-    feature: "Short links without a monthly cap",
+    feature: "Links without a monthly or total cap",
     hrva: { verdict: "yes", note: "Creating links is rate-limited per hour." },
     bitly: { verdict: "no", note: "5 links a month on the Free plan." },
     source: "pricing",
@@ -77,7 +72,7 @@ const rows: Row[] = [
   },
   {
     feature: "QR codes without a monthly cap",
-    hrva: { verdict: "yes", note: "A QR code for every link, as PNG or SVG, and a QR code generator that needs no account." },
+    hrva: { verdict: "yes", note: "A QR code when you create a link, which you can download as PNG or SVG, and a QR code generator that needs no account." },
     bitly: { verdict: "no", note: "2 QR codes a month on the Free plan." },
     source: "pricing",
   },
@@ -149,7 +144,7 @@ export default function BitlyAlternativePage() {
           and in its <a href={sources.privacy} className="text-brand-link">privacy policy</a>. They may have changed since.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          A tick means the plan has it, or does it the way a reader would want. A cross means it does not. A note gives the figure or the condition.
+          A tick means the free plan has it. A cross means it does not. A note gives the figure or the condition. Not stated means the vendor&apos;s page does not say.
         </p>
         <table role="table" aria-labelledby="comparison-heading" className="mt-5 block w-full text-sm sm:table">
           <thead role="rowgroup" className="hidden sm:table-header-group">
