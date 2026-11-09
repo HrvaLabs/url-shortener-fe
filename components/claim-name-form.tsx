@@ -76,7 +76,7 @@ export function ClaimNameForm() {
         </Button>
       </form>
 
-      <div id={`${id}-result`} aria-live="polite" className="mt-4 empty:hidden">
+      <div id={`${id}-result`} aria-live="polite" className={outcome ? "mt-4" : undefined}>
         {outcome?.kind === "answer" && (
           <div className={cn("rounded-lg border p-4 text-sm", outcome.tone === "ok" ? "border-success/30 bg-success/10" : "border-destructive/30 bg-destructive/5")}>
             {outcome.tone === "ok" ? (

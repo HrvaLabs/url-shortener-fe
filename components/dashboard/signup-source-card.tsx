@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 
-export function SignupSourceCard() {
+export function SignupSourceCard({ onDone }: { onDone?: () => void }) {
   const { user, refreshUser } = useAuth()
   const prefix = useId()
   const [choice, setChoice] = useState<SignupChoice | null>(null)
@@ -33,10 +33,13 @@ export function SignupSourceCard() {
     try {
       await userApi.setSignupSource(source)
       setHidden(true)
-      await refreshUser()
+      onDone?.()
+      void refreshUser()
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
         setHidden(true)
+        onDone?.()
+        void refreshUser()
       } else {
         setError(err instanceof Error && err.message ? err.message : SIGNUP_SOURCE_FAILED)
       }
@@ -89,7 +92,7 @@ export function SignupSourceCard() {
             Skip
           </Button>
         </div>
-        <p role="status" aria-live="polite" className="text-sm text-destructive [overflow-wrap:anywhere] empty:hidden">{error}</p>
+        {error && <p role="alert" className="text-sm text-destructive [overflow-wrap:anywhere]">{error}</p>}
       </CardContent>
     </Card>
   )

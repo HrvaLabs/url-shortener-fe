@@ -186,7 +186,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <SignupSourceCard />
+      <SignupSourceCard onDone={() => newUrlButtonRef.current?.focus()} />
 
       <CreateUrlDialog
         open={showCreateDialog}
