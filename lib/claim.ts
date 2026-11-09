@@ -36,6 +36,8 @@ export const aliasFromNext = (next: string | null): string | null => {
   return alias !== null && isAliasShaped(alias) ? alias : null
 }
 
+export const rulesLineNeeded = (text: string): boolean => text !== CLAIM_RULES
+
 export const claimMessage = (status: string, reason: string | null): { tone: "ok" | "no"; text: string } => {
   const known = status in FALLBACKS ? FALLBACKS[status as AliasCheckStatus] : null
   if (status === "AVAILABLE") return { tone: "ok", text: known ?? FALLBACKS.AVAILABLE }

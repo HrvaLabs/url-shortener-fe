@@ -80,7 +80,7 @@ function RegisterForm({ next }: { next: string | null }) {
                 </div>
                 {claimedAlias && (
                   <p className="text-center text-sm text-muted-foreground [overflow-wrap:anywhere]">
-                    Once your email is confirmed, sign in and create hrva.cc/{claimedAlias}. Nobody has it held for you until then.
+                    Once your email is confirmed, sign in and create hrva.cc/{claimedAlias}. It isn&apos;t held for you until then.
                   </p>
                 )}
                 <p className="text-center text-sm text-muted-foreground">

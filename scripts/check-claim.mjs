@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import "./resolve-ts-imports.mjs"
 
-const { aliasFromInput, aliasFromNext, claimMessage, claimNextPath, isAliasShaped } = await import("../lib/claim.ts")
+const { CLAIM_RULES, rulesLineNeeded, aliasFromInput, aliasFromNext, claimMessage, claimNextPath, isAliasShaped } = await import("../lib/claim.ts")
 const { safeNext } = await import("../lib/utils.ts")
 
 let failures = 0
@@ -54,6 +54,10 @@ await check("everyStatusHasAMessage", () => {
     assert.ok(message.text.length > 0, status)
     assert.equal(message.tone, status === "AVAILABLE" ? "ok" : "no")
   }
+  const invalid = claimMessage("INVALID", CLAIM_RULES)
+  assert.equal(invalid.text, CLAIM_RULES)
+  assert.equal(rulesLineNeeded(invalid.text), false)
+  assert.equal(rulesLineNeeded(claimMessage("TAKEN", "This short URL is already taken. Try another.").text), true)
   assert.equal(claimMessage("TAKEN", "This short URL is already taken. Try another.").text, "This short URL is already taken. Try another.")
   assert.ok(claimMessage("TAKEN", null).text.length > 0)
   assert.ok(claimMessage("SOMETHING_NEW", null).text.length > 0)

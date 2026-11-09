@@ -4,7 +4,7 @@ import { useId, useRef, useState } from "react"
 import Link from "next/link"
 import { ApiError, publicApi } from "@/lib/api-client"
 import { useAuth } from "@/lib/auth-context"
-import { aliasFromInput, CLAIM_RATE_LIMITED, CLAIM_RULES, claimMessage, claimNextPath, isAliasShaped } from "@/lib/claim"
+import { aliasFromInput, CLAIM_RATE_LIMITED, CLAIM_RULES, claimMessage, claimNextPath, isAliasShaped, rulesLineNeeded } from "@/lib/claim"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
@@ -93,7 +93,7 @@ export function ClaimNameForm() {
             ) : (
               <>
                 <p className="text-foreground [overflow-wrap:anywhere]">{outcome.text}</p>
-                <p className="mt-1 text-muted-foreground">{CLAIM_RULES}</p>
+                {rulesLineNeeded(outcome.text) && <p className="mt-1 text-muted-foreground">{CLAIM_RULES}</p>}
               </>
             )}
           </div>

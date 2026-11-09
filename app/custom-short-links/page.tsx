@@ -35,7 +35,7 @@ export default function CustomShortLinksPage() {
       <div className="prose-custom">
         <h2 id="what-it-is">What a custom alias is</h2>
         <p>
-          A short link normally ends in random characters, like hrva.cc/k3x9Qa. A custom alias is a name you choose
+          A short link normally ends in random characters, like hrva.cc/k3x9Q. A custom alias is a name you choose
           instead, like hrva.cc/menu. You need a free account to create one, and you set the alias when you create the
           link.
         </p>
