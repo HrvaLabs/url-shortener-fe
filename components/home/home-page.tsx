@@ -525,7 +525,7 @@ function FeatureGrid() {
               <>
                 Short links on your own subdomain, like go.example.com/menu. Free, reviewed by a person, and set up for you
                 after one DNS record.{" "}
-                <Link href="/help/custom-domains" className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                <Link href="/custom-domain-url-shortener" className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
                   Learn more<span className="sr-only"> about custom domains</span>
                 </Link>
               </>

@@ -94,7 +94,8 @@ export default function CustomDomainsHelpPage() {
                 In short: open <strong>Settings</strong> and find <strong>Custom domains</strong>. Apply with a
                 subdomain you own, like go.example.com, and say what you&apos;ll use it for. A person reviews it.
                 Once it&apos;s approved, add one CNAME record at your DNS provider, and hrva.cc does the rest. Then
-                pick the domain when you shorten a link. It&apos;s free.
+                pick the domain when you shorten a link. It&apos;s free. What you get and the limits are also
+                summarised on <Link href="/custom-domain-url-shortener">short links on your own domain</Link>.
               </p>
             </div>
 

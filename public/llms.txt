@@ -34,6 +34,7 @@ Shortening works without an account. A free account adds custom aliases, editing
 - [Campaign tracking (UTM)](https://app.hrva.cc/help/utm): add UTM tags to a short link
 - [Passkeys and security keys](https://app.hrva.cc/help/passkeys): sign in without a password, and two-step verification
 - [Notifications and webhooks](https://app.hrva.cc/help/notifications): opt-in emails (dead links, weekly summary, expiry reminders) and alerts to Discord, Slack, Telegram, ntfy or a signed webhook. Everything is off until you turn it on
+- [Free URL shortener for your own domain](https://app.hrva.cc/custom-domain-url-shortener): short links on your own subdomain, like go.example.com/menu; what setup takes and the limits
 - [Custom domains](https://app.hrva.cc/help/custom-domains): short links on your own subdomain, like go.example.com; free, reviewed by a person, then set up after one CNAME record
 - [How to read the public stats](https://app.hrva.cc/help/stats): what the public numbers mean, and how QR scans are counted
 - [Links without an account](https://app.hrva.cc/help/links-without-an-account): what happens when you make a short link without signing in, and when making them is paused

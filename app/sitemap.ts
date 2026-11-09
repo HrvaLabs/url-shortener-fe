@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteUrl("/stats") },
     dated("/about"),
     dated("/privacy-first-url-shortener"),
+    dated("/custom-domain-url-shortener"),
     dated("/developers"),
     dated("/qr"),
     dated("/utm"),

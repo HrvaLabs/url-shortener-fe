@@ -11,6 +11,7 @@ const columns = [
       { href: "/link-in-bio", label: "Bio pages" },
       { href: "/qr", label: "QR code generator" },
       { href: "/utm", label: "UTM builder" },
+      { href: "/custom-domain-url-shortener", label: "Your own domain" },
       ...(BITLY_COMPARISON.published ? [{ href: BITLY_COMPARISON.path, label: "Bitly alternative" }] : []),
       { href: "/validate", label: "Check a link" },
       { href: "/stats", label: "Public stats" },
