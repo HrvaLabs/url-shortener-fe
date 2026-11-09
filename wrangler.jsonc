@@ -8,6 +8,7 @@
   "version_metadata": {
     "binding": "CF_VERSION_METADATA"
   },
+  "analytics_engine_datasets": [{ "binding": "LANDING_VISITS", "dataset": "hrva_landings" }],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

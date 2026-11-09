@@ -1,6 +1,7 @@
 import openNextWorker from "./.open-next/worker.js"
 import { withBioEdgeCache } from "./lib/bio-edge-cache"
 import { junkPathResponse } from "./lib/junk-paths"
+import { landingVisitOf, writeLandingVisit } from "./lib/landing-visits"
 import { withCallbackHeaders, withContentSecurityPolicy } from "./lib/security-headers"
 import { withUnavailableStatus } from "./lib/unavailable-status"
 
@@ -8,7 +9,11 @@ import { withUnavailableStatus } from "./lib/unavailable-status"
 const nextFetch = withBioEdgeCache(openNextWorker.fetch)
 
 const worker = {
-  fetch: async (request, env, context) => junkPathResponse(request) ?? withContentSecurityPolicy(withUnavailableStatus(request, withCallbackHeaders(request, await nextFetch(request, env, context)))),
+  fetch: async (request, env, context) => {
+    const response = junkPathResponse(request) ?? withContentSecurityPolicy(withUnavailableStatus(request, withCallbackHeaders(request, await nextFetch(request, env, context))))
+    writeLandingVisit(env.LANDING_VISITS, landingVisitOf(request, response))
+    return response
+  },
 }
 
 export default worker
