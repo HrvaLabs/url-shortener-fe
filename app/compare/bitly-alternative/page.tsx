@@ -124,12 +124,12 @@ export default function BitlyAlternativePage() {
       after={<JsonLdScript data={comparisonJsonLd} />}
     >
       <section className="mt-10">
-        <h2 className="font-display text-2xl leading-tight">hrva.cc and Bitly&apos;s Free plan, side by side</h2>
+        <h2 id="comparison-heading" className="font-display text-2xl leading-tight">hrva.cc and Bitly&apos;s Free plan, side by side</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Bitly&apos;s facts were checked on {checked} on its <a href={sources.pricing} className="text-brand-link">pricing page</a>{" "}
           and in its <a href={sources.privacy} className="text-brand-link">privacy policy</a>. They may have changed since.
         </p>
-        <table role="table" className="mt-5 block w-full text-sm sm:table">
+        <table role="table" aria-labelledby="comparison-heading" className="mt-5 block w-full text-sm sm:table">
           <thead role="rowgroup" className="hidden sm:table-header-group">
             <tr role="row" className="border-b text-left">
               <th scope="col" role="columnheader" className="w-40 py-2 pr-4 font-semibold">Feature</th>

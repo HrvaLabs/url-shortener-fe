@@ -44,6 +44,7 @@ interface Row {
   shortio: string
   bitly: string
   rebrandly: string
+  sources: Record<Vendor, string>
 }
 
 const rows: Row[] = [
@@ -54,9 +55,15 @@ const rows: Row[] = [
     dub: "3 custom domains.",
     shortio: "5 custom domains. Domain registration fees are not included in the plan.",
     bitly:
-      "Not in the Free plan's list. The Growth plan ($29 a month, $348 annual charge) lists a complimentary custom domain.",
+      "Not included. Branded links, which are links on your own custom domain, start at the Growth plan ($29 a month, $348 annual charge), which also lists a complimentary custom domain.",
     rebrandly:
-      "1 custom domain, shown as Yourbrand.bio, and 1 free Rebrand.ly domain. The page does not state whether a domain you already own can be connected on the Free plan.",
+      "Yes, including one you already own. The Free plan lists 1 custom domain (shown as Yourbrand.bio) and a domain count of 1, plus the free Rebrand.ly domain, and is marked for connecting domains you already own.",
+    sources: {
+      dub: "Free plan card",
+      shortio: "Free column, Custom domains",
+      bitly: "Detailed comparison, Branded Links",
+      rebrandly: "Detailed comparison, Connect your domains",
+    },
   },
   {
     feature: "Links you can create",
@@ -66,6 +73,12 @@ const rows: Row[] = [
       "1,000 branded links in total, issued once and usable over the account's lifetime. Links created through the API or bulk create: 1,000.",
     bitly: "5 links a month.",
     rebrandly: "10 links a month.",
+    sources: {
+      dub: "Free plan card",
+      shortio: "Free column, Branded links total",
+      bitly: "Free plan card",
+      rebrandly: "Free plan card",
+    },
   },
   {
     feature: "Click tracking",
@@ -75,6 +88,12 @@ const rows: Row[] = [
       "50,000 tracked clicks a month. Redirects are unlimited, and the FAQ says detailed statistics are viewable for the first 50,000 clicks.",
     bitly: "Unlimited clicks and QR code scans.",
     rebrandly: "Unlimited clicks and QR code scans. Engagement data covers 100 clicks a month.",
+    sources: {
+      dub: "Free plan card",
+      shortio: "Free column, Tracked clicks and FAQ",
+      bitly: "Free plan card",
+      rebrandly: "Free plan card and Engagement data",
+    },
   },
   {
     feature: "Ads",
@@ -83,6 +102,12 @@ const rows: Row[] = [
     shortio: "Not stated on its pricing page.",
     bitly: "The Free plan is listed as \"With Ads\".",
     rebrandly: "Not stated on its pricing page. Free plan QR codes and the free link gallery carry a watermark.",
+    sources: {
+      dub: "Whole page",
+      shortio: "Whole page",
+      bitly: "Free plan card",
+      rebrandly: "Whole page",
+    },
   },
   {
     feature: "Open source",
@@ -91,6 +116,12 @@ const rows: Row[] = [
     shortio: "Not stated on its pricing page.",
     bitly: "Not stated on its pricing page.",
     rebrandly: "Not stated on its pricing page.",
+    sources: {
+      dub: "Whole page",
+      shortio: "Whole page",
+      bitly: "Whole page",
+      rebrandly: "Whole page",
+    },
   },
 ]
 
@@ -109,14 +140,14 @@ export default function FreeCustomDomainShortenersPage() {
       title="Free URL shorteners with custom domains compared"
       lead={
         <p>
-          This page compares the free plans of hrva.cc, Dub, Short.io, Bitly and Rebrandly. Each competitor
+          This page compares hrva.cc and the free plans of Dub, Short.io, Bitly and Rebrandly. Each competitor
           figure is read from that vendor&apos;s own pricing page. Where a page does not state something, the table says so.
         </p>
       }
       after={<JsonLdScript data={comparisonJsonLd} />}
     >
       <section className="mt-10">
-        <h2 className="font-display text-2xl leading-tight">Free plans, side by side</h2>
+        <h2 id="free-plans-heading" className="font-display text-2xl leading-tight">Free plans, side by side</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Checked on {checked} on the pricing pages of{" "}
           {vendors.map(({ key, name }, index) => (
@@ -129,7 +160,7 @@ export default function FreeCustomDomainShortenersPage() {
           ))}
           . They may have changed since.
         </p>
-        <table role="table" className="mt-5 block w-full text-sm lg:table">
+        <table role="table" aria-labelledby="free-plans-heading" className="mt-5 block w-full text-sm lg:table">
           <thead role="rowgroup" className="hidden lg:table-header-group">
             <tr role="row" className="border-b text-left align-top">
               <th scope="col" role="columnheader" className="w-32 py-2 pr-4 font-semibold">Feature</th>
@@ -152,7 +183,11 @@ export default function FreeCustomDomainShortenersPage() {
                 {vendors.map(({ key, name }) => (
                   <td key={key} role="cell" className="block break-words py-1 leading-relaxed lg:table-cell lg:py-3 lg:pr-4 lg:align-top">
                     <span className="font-medium text-muted-foreground lg:hidden">{name} Free: </span>
-                    {row[key]}
+                    {row[key]}{" "}
+                    <a href={sources[key]} className="text-xs text-brand-link">
+                      {name} pricing
+                    </a>
+                    <span className="text-xs text-muted-foreground"> ({row.sources[key]})</span>
                   </td>
                 ))}
               </tr>
