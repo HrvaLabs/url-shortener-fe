@@ -266,10 +266,28 @@
   animation: copy-pulse 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes count-bump {
+  0% { color: hsl(var(--brand)); transform: scale(1.15); }
+  25% { transform: scale(1); }
+  60% { color: hsl(var(--brand)); }
+}
+
+@keyframes count-bump-color {
+  0%, 60% { color: hsl(var(--brand)); }
+}
+
+.animate-count-bump {
+  animation: count-bump 1600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-result-in,
   .animate-copy-pulse {
     animation: none;
+  }
+
+  .animate-count-bump {
+    animation: count-bump-color 1600ms ease-out;
   }
 }
 

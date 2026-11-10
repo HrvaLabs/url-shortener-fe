@@ -2,6 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { adminApi, retryUnlessRefused } from "@/lib/api-client"
+import { liveRefresh } from "@/lib/live"
 import type { AnalyticsRange } from "@/lib/types"
 
 export function useTrafficStats(days: AnalyticsRange) {
@@ -10,6 +11,7 @@ export function useTrafficStats(days: AnalyticsRange) {
     queryFn: () => adminApi.getTrafficStats(days),
     placeholderData: keepPreviousData,
     retry: retryUnlessRefused,
+    ...liveRefresh(true),
   })
 }
 
@@ -19,6 +21,7 @@ export function useLinksStats(days: AnalyticsRange) {
     queryFn: () => adminApi.getLinksStats(days),
     placeholderData: keepPreviousData,
     retry: retryUnlessRefused,
+    ...liveRefresh(true),
   })
 }
 
@@ -28,6 +31,7 @@ export function useUsersStats(days: AnalyticsRange) {
     queryFn: () => adminApi.getUsersStats(days),
     placeholderData: keepPreviousData,
     retry: retryUnlessRefused,
+    ...liveRefresh(true),
   })
 }
 
@@ -37,6 +41,7 @@ export function useSafetyStats(days: AnalyticsRange) {
     queryFn: () => adminApi.getSafetyStats(days),
     placeholderData: keepPreviousData,
     retry: retryUnlessRefused,
+    ...liveRefresh(true),
   })
 }
 
@@ -46,6 +51,7 @@ export function useSystemStats(days: AnalyticsRange) {
     queryFn: () => adminApi.getSystemStats(days),
     placeholderData: keepPreviousData,
     retry: retryUnlessRefused,
+    ...liveRefresh(true),
   })
 }
 

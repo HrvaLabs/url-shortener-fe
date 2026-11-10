@@ -31,6 +31,9 @@ import { blockReasonLabels } from "@/lib/labels"
 import { PageMeta } from "@/components/page-meta"
 import { DestinationHealthBadge } from "@/components/notifications/destination-health-badge"
 import { DateTimeLines } from "@/components/admin/date-time-lines"
+import { LiveNumber } from "@/components/live-number"
+import { StaleDataNotice } from "@/components/stale-data-notice"
+import { liveStamp, liveState } from "@/lib/live"
 import { SortHead, SortSelect, adminSelectClass, type SortOption } from "@/components/admin/sort-controls"
 import { useRowRemovalFocus } from "@/lib/hooks/useRowRemovalFocus"
 import type { UrlResponse, UrlFilters } from "@/lib/types"
@@ -155,7 +158,13 @@ function AdminUrls() {
     anonymous: anonymousFilter || undefined,
     deadDestination: deadFilter || undefined,
   }
-  const { data: urls, isLoading, isFetching, error, refetch } = useAllUrls(filters, page, size, sort, order)
+  const selectionKey = `${page}-${size}-${sort}-${order}-${filterKey}`
+  const [selection, setSelection] = useState<{ key: string; ids: Set<number> }>({ key: selectionKey, ids: new Set() })
+  const selectionOnPage = selection.key === selectionKey ? selection.ids : new Set<number>()
+  const urlsQuery = useAllUrls(filters, page, size, sort, order, selectionOnPage.size === 0)
+  const { data: urls, isLoading, error, refetch } = urlsQuery
+  const listState = liveState(error, !!urls)
+  const stamp = liveStamp(urlsQuery)
   const { data: deadCount } = useAllUrls({ deadDestination: true }, 0, 1)
   useClampedPage(page, urls?.totalPages, setPage)
   const deactivateUrl = useDeactivateUrl()
@@ -178,9 +187,8 @@ function AdminUrls() {
   const [reportIds, setReportIds] = useState<number[]>([])
   const [reportOpen, setReportOpen] = useState(false)
   const reportButtonRef = useRef<HTMLButtonElement>(null)
-  const selectionKey = `${page}-${size}-${sort}-${order}-${filterKey}`
-  const [selection, setSelection] = useState<{ key: string; ids: Set<number> }>({ key: selectionKey, ids: new Set() })
-  const selectedIds = selection.key === selectionKey ? selection.ids : new Set<number>()
+  const selectedIds = new Set(urls?.content?.filter((url) => selectionOnPage.has(url.id)).map((url) => url.id) ?? [])
+  if (urls && selectionOnPage.size > 0 && selectedIds.size === 0) setSelection({ key: selectionKey, ids: new Set() })
   const setSelectedIds = (update: Set<number> | ((prev: Set<number>) => Set<number>)) =>
     setSelection((prev) => {
       const current = prev.key === selectionKey ? prev.ids : new Set<number>()
@@ -376,16 +384,13 @@ function AdminUrls() {
         </div>
       )}
 
-      {error && urls && (
-        <div role="alert" className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-2.5 text-sm text-destructive">
-          <span className="[overflow-wrap:anywhere]">Couldn&apos;t refresh the list. It may be out of date.</span>
-          <Button size="sm" variant="outline" className="h-8" disabled={isFetching} onClick={() => refetch()}>Retry</Button>
-        </div>
+      {listState === "stale" && (
+        <StaleDataNotice message="Couldn't refresh the list. It may be out of date." onRetry={() => refetch()} returnFocusTo={searchRef} />
       )}
 
       {isLoading ? (
         <AdminUrlsLoading />
-      ) : error && !urls ? (
+      ) : listState === "failed" ? (
         <div className="rounded-xl border bg-card px-6 py-12 text-center">
           <p className="text-sm font-medium text-destructive">Failed to load URLs</p>
           <Button variant="outline" size="sm" className="mt-4" onClick={() => window.location.reload()}>Retry</Button>
@@ -461,7 +466,7 @@ function AdminUrls() {
                     {url.ownerPossibleScammer && <Badge variant="warning" className="mt-1 whitespace-nowrap">Possible scammer</Badge>}
                   </TableCell>
                   <TableCell className="hidden tabular-nums @min-[48rem]:table-cell">
-                    <span className="block">{url.visits.toLocaleString()}</span>
+                    <span className="block"><LiveNumber value={url.visits} stamp={stamp} /></span>
                     {url.visitLimit > 0 && <span className="block text-xs text-muted-foreground">{opensText(url)}</span>}
                   </TableCell>
                   <TableCell className="hidden tabular-nums text-muted-foreground @min-[64rem]:table-cell">

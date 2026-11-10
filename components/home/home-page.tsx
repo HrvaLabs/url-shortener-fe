@@ -201,7 +201,7 @@ function FeatureGrid() {
             className="lg:col-span-2"
             icon={BarChart3}
             title="Link analytics"
-            description="Clicks and daily unique visitors per link, with referrers, countries and devices, without storing who your visitors are."
+            description="Clicks and daily unique visitors per link, with referrers, countries and devices, without storing who your visitors are. The numbers update every 10 seconds."
           >
             <div aria-hidden="true">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">

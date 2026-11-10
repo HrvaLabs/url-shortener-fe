@@ -33,6 +33,9 @@ import { EditLinkDialog } from "@/components/edit-link-dialog"
 import { SignupSourceCard } from "@/components/dashboard/signup-source-card"
 import { PageMeta } from "@/components/page-meta"
 import { DestinationHealthBadge } from "@/components/notifications/destination-health-badge"
+import { LiveNumber } from "@/components/live-number"
+import { StaleDataNotice } from "@/components/stale-data-notice"
+import { liveStamp, liveState } from "@/lib/live"
 import { shortHost } from "@/lib/domains"
 
 const selectClass = cn(
@@ -74,7 +77,11 @@ function Dashboard() {
     tag: tagFilter || undefined,
   }
   const { data: myTags } = useQuery({ queryKey: ["urls", "tags"], queryFn: () => urlApi.getMyTags() })
-  const { data: urls, isLoading, error } = useMyUrls(filters, page, size, sort, order)
+  const urlsQuery = useMyUrls(filters, page, size, sort, order, true)
+  const { data: urls, isLoading, error, refetch } = urlsQuery
+  const listState = liveState(error, !!urls)
+  const stamp = liveStamp(urlsQuery)
+  const headingRef = useRef<HTMLHeadingElement>(null)
   const deactivateUrl = useDeactivateUrl()
   const activateUrl = useActivateUrl()
   useClampedPage(page, urls?.totalPages, setPage)
@@ -171,7 +178,7 @@ function Dashboard() {
       <PageMeta title="Dashboard — My URLs" description="Manage and track your shortened URLs on hrva.cc." />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl">My URLs</h1>
+          <h1 ref={headingRef} tabIndex={-1} className="font-display text-2xl focus-visible:ring-0 focus-visible:ring-offset-0">My URLs</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage and track your shortened links</p>
         </div>
         <div className="flex items-center gap-2">
@@ -245,13 +252,17 @@ function Dashboard() {
         </p>
       </div>
 
+      {listState === "stale" && (
+        <StaleDataNotice message="Couldn't refresh the list. It may be out of date." onRetry={() => refetch()} returnFocusTo={headingRef} />
+      )}
+
       {isLoading ? (
         <div className="space-y-3 rounded-xl border bg-card p-5">
           {[...Array(5)].map((_, i) => (
             <Skeleton key={i} className="h-10 w-full" />
           ))}
         </div>
-      ) : error ? (
+      ) : listState === "failed" ? (
         <div className="rounded-xl border bg-card px-6 py-12 text-center">
           <p className="text-sm text-destructive">Failed to load URLs</p>
           <Button variant="outline" size="sm" onClick={() => window.location.reload()} className="mt-4">
@@ -335,7 +346,7 @@ function Dashboard() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm font-medium tabular-nums">{url.visits.toLocaleString()}</span>
+                    <LiveNumber value={url.visits} stamp={stamp} className="text-sm font-medium tabular-nums" />
                     {url.visitLimit > 0 && (
                       <div className="mt-1 flex items-center gap-2 text-xs tabular-nums text-muted-foreground">
                         <Progress value={((url.opens ?? 0) / url.visitLimit) * 100} className="h-1.5 w-12 shrink-0" />

@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef } from "react"
 import Link from "next/link"
 import { PageMeta } from "@/components/page-meta"
 import { AnalyticsEmpty, AnalyticsError, AnalyticsSkeleton } from "@/components/analytics/analytics-states"
@@ -7,8 +8,11 @@ import { BreakdownPanels } from "@/components/analytics/breakdown-panels"
 import { ClicksChart } from "@/components/analytics/clicks-chart"
 import { RangePicker } from "@/components/analytics/range-picker"
 import { StatTotals } from "@/components/analytics/stat-totals"
+import { LiveNumber } from "@/components/live-number"
+import { StaleDataNotice } from "@/components/stale-data-notice"
 import { ANALYTICS_HISTORY_START, analyticsDay, analyticsHref } from "@/lib/analytics"
 import { useAnalyticsOverview } from "@/lib/hooks/useAnalytics"
+import { liveStamp, liveState, type LiveStamp } from "@/lib/live"
 import type { AnalyticsOverview, AnalyticsRange, AnalyticsTopLink } from "@/lib/types"
 import { cn, formatDate, plural, shortHostOf } from "@/lib/utils"
 import { shortHost } from "@/lib/domains"
@@ -19,35 +23,47 @@ interface OverviewAnalyticsProps {
 }
 
 export function OverviewAnalytics({ days, onDaysChange }: OverviewAnalyticsProps) {
-  const { data, error, isPending, isPlaceholderData, refetch, isRefetching } = useAnalyticsOverview(days)
+  const query = useAnalyticsOverview(days)
+  const { data, error, isPending, isPlaceholderData, refetch, isRefetching } = query
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const state = liveState(error, data !== undefined)
 
   return (
     <div className="space-y-6">
       <PageMeta title="Dashboard — Analytics" description="Clicks, daily unique visitors and top links across all your links." />
       <div>
-        <h1 className="font-display text-2xl">Analytics</h1>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <h1 ref={headingRef} tabIndex={-1} className="font-display text-2xl focus-visible:ring-0 focus-visible:ring-offset-0">Analytics</h1>
+          <Link href="/help/stats#overview" className="text-sm text-brand-link">How analytics work</Link>
+        </div>
         <p className="mt-1 text-sm text-muted-foreground">Clicks across all your links</p>
       </div>
 
       {isPending ? (
         <AnalyticsSkeleton variant="overview" />
+      ) : data && state !== "failed" ? (
+        <>
+          {state === "stale" && (
+            <StaleDataNotice message="Couldn't refresh these numbers. They may be out of date." onRetry={() => refetch()} returnFocusTo={headingRef} />
+          )}
+          <OverviewBody data={data} stamp={liveStamp(query)} days={days} onDaysChange={onDaysChange} refreshing={isPlaceholderData} />
+        </>
       ) : error ? (
         <AnalyticsError error={error} retrying={isRefetching} onRetry={() => refetch()} />
-      ) : (
-        <OverviewBody data={data} days={days} onDaysChange={onDaysChange} refreshing={isPlaceholderData} />
-      )}
+      ) : null}
     </div>
   )
 }
 
 interface OverviewBodyProps {
   data: AnalyticsOverview
+  stamp: LiveStamp
   days: AnalyticsRange
   onDaysChange: (days: AnalyticsRange) => void
   refreshing: boolean
 }
 
-function OverviewBody({ data, days, onDaysChange, refreshing }: OverviewBodyProps) {
+function OverviewBody({ data, stamp, days, onDaysChange, refreshing }: OverviewBodyProps) {
   const { totals, daily, topLinks, breakdowns } = data
   const empty = totals.clicks + totals.botClicks === 0
   const historyStart = formatDate(analyticsDay(ANALYTICS_HISTORY_START))
@@ -70,7 +86,9 @@ function OverviewBody({ data, days, onDaysChange, refreshing }: OverviewBodyProp
           ))}
           <div className="max-w-sm">
             <dt className="text-xs text-muted-foreground">All-time visits</dt>
-            <dd className="mt-0.5 font-medium tabular-nums">{data.totalVisits.toLocaleString()}</dd>
+            <dd className="mt-0.5 font-medium tabular-nums">
+              <LiveNumber value={data.totalVisits} stamp={stamp} />
+            </dd>
             <dd className="mt-1 text-xs text-muted-foreground">
               Daily unique visitors, added up since each link was created. Counts from before {historyStart} used an older method.
             </dd>
@@ -83,6 +101,8 @@ function OverviewBody({ data, days, onDaysChange, refreshing }: OverviewBodyProp
       <div className={cn("space-y-6 transition-opacity", refreshing && "opacity-60")} aria-busy={refreshing}>
         <StatTotals
           totals={totals}
+          scope={`${data.from}:${data.to}`}
+          stamp={stamp}
           uniqueVisitorsHint="Counted per day and per link, so one person on two different days or two links counts twice."
         />
 

@@ -31,6 +31,7 @@
     "check:link-edit": "node scripts/check-invisible.mjs && TZ=UTC node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-link-edit.mjs && TZ=America/Los_Angeles node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-link-edit.mjs && TZ=Pacific/Auckland node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-link-edit.mjs",
     "check:session-check": "node scripts/check-invisible.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-session-check.mjs",
     "check:api-client": "node scripts/check-invisible.mjs && NODE_ENV=production node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-api-client.mjs",
+    "check:live": "node scripts/check-invisible.mjs && NODE_ENV=production node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-live.mjs",
     "build:cf": "opennextjs-cloudflare build",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",

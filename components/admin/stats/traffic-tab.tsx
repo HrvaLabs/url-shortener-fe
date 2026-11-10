@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { botShare } from "@/lib/admin-stats"
 import { ANALYTICS_HISTORY_START, analyticsDay } from "@/lib/analytics"
 import { useTrafficStats } from "@/lib/hooks/useSiteStats"
+import type { LiveStamp } from "@/lib/live"
 import type { AnalyticsRange, TrafficStats, TrafficTopLink } from "@/lib/types"
 import { formatDate } from "@/lib/utils"
 
@@ -26,15 +27,16 @@ interface TrafficTabProps {
 
 export function TrafficTab({ days }: TrafficTabProps) {
   const query = useTrafficStats(days)
-  return <StatsPanel query={query}>{(data) => <TrafficBody data={data} days={data.days} />}</StatsPanel>
+  return <StatsPanel query={query}>{(data, stamp) => <TrafficBody data={data} stamp={stamp} days={data.days} />}</StatsPanel>
 }
 
 interface TrafficBodyProps {
   data: TrafficStats
+  stamp: LiveStamp
   days: AnalyticsRange
 }
 
-function TrafficBody({ data, days }: TrafficBodyProps) {
+function TrafficBody({ data, stamp, days }: TrafficBodyProps) {
   const [showBots, setShowBots] = useState(false)
   const { totals, daily, topLinks, breakdowns } = data
   const empty = totals.clicks + totals.botClicks === 0
@@ -65,6 +67,8 @@ function TrafficBody({ data, days }: TrafficBodyProps) {
     <>
       <StatTotals
         totals={totals}
+        scope={`${data.from}:${data.to}`}
+        stamp={stamp}
         columnsClassName="@2xl:grid-cols-3"
         uniqueVisitorsLabel={uniqueVisitorsLabel}
         uniqueVisitorsHint="Each link's unique visitors per day, added up. One person on two links or two days counts more than once."

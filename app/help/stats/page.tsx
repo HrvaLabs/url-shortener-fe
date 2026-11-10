@@ -80,6 +80,17 @@ export default function StatsHelpPage() {
               <p>
                 One link&apos;s analytics page has the same lists for that link alone.
               </p>
+              <p>
+                <strong>URLs</strong> and <strong>Analytics</strong> update by themselves every 10 seconds while
+                the page is open, so a new click shows up without a reload, and a visit or click count that went
+                up is highlighted for a moment. In a tab you aren&apos;t looking at, the updates pause and catch up when
+                you come back.
+              </p>
+              <p>
+                The <strong>Visits</strong> column in URLs counts daily unique visitors, so a second click from
+                the same person on the same day doesn&apos;t change it. <strong>Clicks</strong> in Analytics counts
+                every click except bots, which <strong>Bot clicks</strong> counts apart.
+              </p>
 
               <h2 id="qr-scans">QR scans and other clicks</h2>
               <ol>

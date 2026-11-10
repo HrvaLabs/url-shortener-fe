@@ -6,12 +6,15 @@ import { PageMeta } from "@/components/page-meta"
 import { AnalyticsError, AnalyticsSkeleton } from "@/components/analytics/analytics-states"
 import { BioViewsChart } from "@/components/analytics/bio-views-chart"
 import { RangePicker } from "@/components/analytics/range-picker"
+import { StaleDataNotice } from "@/components/stale-data-notice"
+import { LiveNumber } from "@/components/live-number"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ApiError } from "@/lib/api-client"
 import { bioButtonLabel, displayShareUrl, linkStateLabel } from "@/lib/bio"
 import { useBioAnalytics } from "@/lib/hooks/useBioAnalytics"
 import { useFocusAfterRetry } from "@/lib/hooks/useFocusAfterRetry"
+import { liveStamp, liveState, type LiveStamp } from "@/lib/live"
 import type { AnalyticsRange, BioButtonClicks, BioPageAnalytics } from "@/lib/types"
 import { cn, getShortBaseUrl } from "@/lib/utils"
 
@@ -23,7 +26,9 @@ interface BioAnalyticsProps {
 const panelClass = "min-w-0 rounded-xl border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]"
 
 export function BioAnalytics({ days, onDaysChange }: BioAnalyticsProps) {
-  const { data, error, isPending, isPlaceholderData, refetch, isRefetching } = useBioAnalytics(days)
+  const query = useBioAnalytics(days)
+  const { data, error, isPending, isPlaceholderData, refetch, isRefetching } = query
+  const state = liveState(error, data !== undefined)
   const noPage = error instanceof ApiError && error.status === 404
   const headingRef = useRef<HTMLHeadingElement>(null)
   const retry = useFocusAfterRetry(headingRef, !!data && !error)
@@ -35,7 +40,7 @@ export function BioAnalytics({ days, onDaysChange }: BioAnalyticsProps) {
         <h1 ref={headingRef} tabIndex={-1} className="font-display text-2xl focus-visible:ring-0 focus-visible:ring-offset-0">
           Bio page
         </h1>
-        {data && !error && <PageLine handle={data.handle} />}
+        {data && state !== "failed" && <PageLine handle={data.handle} />}
       </div>
 
       {isPending ? (
@@ -47,11 +52,16 @@ export function BioAnalytics({ days, onDaysChange }: BioAnalyticsProps) {
             Create your bio page
           </Link>
         </div>
+      ) : data && state !== "failed" ? (
+        <>
+          {state === "stale" && (
+            <StaleDataNotice message="Couldn't refresh these numbers. They may be out of date." onRetry={() => refetch()} returnFocusTo={headingRef} />
+          )}
+          <BioAnalyticsBody data={data} stamp={liveStamp(query)} onDaysChange={onDaysChange} refreshing={isPlaceholderData} days={days} />
+        </>
       ) : error ? (
         <AnalyticsError error={error} retrying={isRefetching} onRetry={() => retry(refetch)} />
-      ) : (
-        <BioAnalyticsBody data={data} onDaysChange={onDaysChange} refreshing={isPlaceholderData} days={days} />
-      )}
+      ) : null}
     </div>
   )
 }
@@ -76,12 +86,13 @@ function PageLine({ handle }: { handle: string | null }) {
 
 interface BioAnalyticsBodyProps {
   data: BioPageAnalytics
+  stamp: LiveStamp
   days: AnalyticsRange
   onDaysChange: (days: AnalyticsRange) => void
   refreshing: boolean
 }
 
-function BioAnalyticsBody({ data, days, onDaysChange, refreshing }: BioAnalyticsBodyProps) {
+function BioAnalyticsBody({ data, stamp, days, onDaysChange, refreshing }: BioAnalyticsBodyProps) {
   const totals = [
     { label: "Views", value: data.views, hint: "Each visitor counts once a day. Bots are counted apart." },
     { label: "Bot views", value: data.botViews, hint: "Link previews and crawlers. Not counted as views." },
@@ -96,7 +107,9 @@ function BioAnalyticsBody({ data, days, onDaysChange, refreshing }: BioAnalytics
           {totals.map((stat) => (
             <div key={stat.label} className="min-w-0 bg-card p-5">
               <dt className="text-sm text-muted-foreground">{stat.label}</dt>
-              <dd className="mt-1 text-2xl font-semibold tabular-nums">{stat.value.toLocaleString()}</dd>
+              <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                <LiveNumber value={stat.value} scope={`${data.from}:${data.to}`} stamp={stamp} />
+              </dd>
               {stat.hint && <dd className="mt-1.5 text-xs text-muted-foreground">{stat.hint}</dd>}
             </div>
           ))}

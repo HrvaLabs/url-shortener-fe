@@ -3,19 +3,22 @@
 import { keepPreviousData, useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { adminApi, urlApi } from "@/lib/api-client"
 import { refreshPublicSettingsAfterRefusal } from "@/lib/hooks/useSettings"
+import { liveRefresh } from "@/lib/live"
 import type { CreateUrlDto, UrlUpdateDto, UrlFilters } from "@/lib/types"
 
-export function useMyUrls(filters: UrlFilters = {}, page = 0, size = 20, sort = "createDate", order = "desc") {
+export function useMyUrls(filters: UrlFilters = {}, page = 0, size = 20, sort = "createDate", order = "desc", live = false) {
   return useQuery({
     queryKey: ["urls", "my", filters, page, size, sort, order],
     queryFn: () => urlApi.getMyUrls(filters, page, size, sort, order),
+    ...liveRefresh(live),
   })
 }
 
-export function useAllUrls(filters: UrlFilters = {}, page = 0, size = 20, sort = "createDate", order = "desc") {
+export function useAllUrls(filters: UrlFilters = {}, page = 0, size = 20, sort = "createDate", order = "desc", live = false) {
   return useQuery({
     queryKey: ["urls", "all", filters, page, size, sort, order],
     queryFn: () => urlApi.getAllUrls(filters, page, size, sort, order),
+    ...liveRefresh(live),
   })
 }
 
