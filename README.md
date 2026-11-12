@@ -69,7 +69,8 @@ The labels below are the ones in the site header and footer.
 The production Cloudflare Worker `url-shortener` is connected to the
 [HrvaLabs/URL-Shortener-FE](https://github.com/HrvaLabs/URL-Shortener-FE)
 repository. Pushing to `main` triggers Workers Builds, using `npm run build`
-and `npm run deploy`. Preview branches use a separate build trigger.
+and `npm run deploy`. Other branches are not built on Cloudflare; CI builds
+the Worker bundle with `npm run build:cf` on every pull request.
 
 ## More
 - [AGENTS.md](./AGENTS.md) covers the architecture, commands, pages and gotchas.

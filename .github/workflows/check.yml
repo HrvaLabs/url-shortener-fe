@@ -56,5 +56,5 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Build
-        run: npm run build
+      - name: Build the Cloudflare Worker
+        run: npm run build:cf
