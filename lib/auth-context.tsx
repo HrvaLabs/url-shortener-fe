@@ -140,11 +140,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       lastRenewedAt.current = now
       userApi.renewSession().catch(() => undefined)
     }
+    const renewWhenVisible = () => {
+      if (document.visibilityState === "visible") renewOnActivity()
+    }
+    renewOnActivity()
     window.addEventListener("pointerdown", renewOnActivity)
     window.addEventListener("keydown", renewOnActivity)
+    document.addEventListener("visibilitychange", renewWhenVisible)
     return () => {
       window.removeEventListener("pointerdown", renewOnActivity)
       window.removeEventListener("keydown", renewOnActivity)
+      document.removeEventListener("visibilitychange", renewWhenVisible)
     }
   }, [user])
 
