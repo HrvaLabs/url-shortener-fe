@@ -513,8 +513,9 @@ export default function PrivacyPage() {
                   alert names the page&apos;s handle (or its page number if it has none) and the
                   owner&apos;s account number, and adds the reasons the text checks found or, for a
                   visitor report, its category and the full details, cleaned the same way. The
-                  page&apos;s display name and bio text are never sent. A sign-up alert shows only the
-                  account number and whether the account uses email, Google or GitHub. A phishing-wave
+                  page&apos;s display name and bio text are never sent. A sign-up alert shows the
+                  account number, the email address masked (only its first character and its domain, like
+                  k***@gmail.com) and whether the account uses email, Google or GitHub. A phishing-wave
                   alert names the domain and its age, if known, and counts
                   the new links and the different accounts or networks that made them, without
                   saying which ones. The channel also gets an alert when links made without an

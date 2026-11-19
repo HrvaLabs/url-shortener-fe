@@ -13,7 +13,7 @@ export const CONTENT_UPDATED = {
   "/mcp": "2026-11-01",
   "/report": "2026-10-27",
   "/validate": "2026-10-21",
-  "/privacy": "2026-11-09",
+  "/privacy": "2026-11-20",
   "/terms": "2026-10-30",
   "/security": "2026-11-05",
   "/about": "2026-11-09",
