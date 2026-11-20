@@ -1,4 +1,4 @@
-import type { BlockReason, UrlCheckOutcome } from "@/lib/types"
+import type { BlockReason, DnsFilterStatus, UrlCheckOutcome } from "@/lib/types"
 
 export const outcomeLabels: Record<UrlCheckOutcome, string> = {
   ALLOWED: "Allowed",
@@ -14,6 +14,18 @@ export const outcomeVariants: Record<UrlCheckOutcome, "success" | "destructive" 
   CLEAN: "secondary",
 }
 
+export const dnsFilterStatusLabels: Record<DnsFilterStatus, string> = {
+  BLOCKED: "Blocked",
+  NOT_BLOCKED: "Not blocked",
+  NO_ANSWER: "No answer",
+}
+
+export const dnsFilterStatusVariants: Record<DnsFilterStatus, "destructive" | "success" | "secondary"> = {
+  BLOCKED: "destructive",
+  NOT_BLOCKED: "success",
+  NO_ANSWER: "secondary",
+}
+
 export const blockReasonLabels: Record<BlockReason, string> = {
   SAFE_BROWSING: "Google Safe Browsing",
   BLOCKLIST: "On a blocklist",
@@ -21,6 +33,7 @@ export const blockReasonLabels: Record<BlockReason, string> = {
   ADMIN: "Blocked by an admin",
   USER_BLOCKED: "Owner's account blocked",
   SCAM_SIGNALS: "Scam signals",
+  DNS_FILTERS: "Security DNS filters",
   CAMPAIGN: "Campaign hold",
   SIGN_IN_FORM: "Sign-in form hold",
 }

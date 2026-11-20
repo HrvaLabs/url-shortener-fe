@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { adminApi } from "@/lib/api-client"
-import { blockReasonLabels, outcomeLabels, outcomeVariants } from "@/lib/labels"
+import { blockReasonLabels, dnsFilterStatusLabels, dnsFilterStatusVariants, outcomeLabels, outcomeVariants } from "@/lib/labels"
 
 function ResultRow({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -26,6 +26,7 @@ export function UrlTester() {
   })
   const result = check.data
   const reasons = result?.reasons ?? []
+  const dnsFilters = result?.dnsFilters ?? []
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -73,6 +74,22 @@ export function UrlTester() {
               <span className="text-muted-foreground">No rule, list or heuristic matched</span>
             )}
           </ResultRow>
+          {dnsFilters.length > 0 && (
+            <ResultRow label="DNS filters">
+              <ul className="space-y-1">
+                {dnsFilters.map((entry) => (
+                  <li key={entry.filter} className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="min-w-24 font-medium">{entry.filter}</span>
+                    <Badge variant={dnsFilterStatusVariants[entry.status] ?? "secondary"}>
+                      {dnsFilterStatusLabels[entry.status] ?? entry.status}
+                    </Badge>
+                    {entry.answer && <span className="font-mono text-[13px] text-muted-foreground [overflow-wrap:anywhere]">{entry.answer}</span>}
+                  </li>
+                ))}
+              </ul>
+              {!result.dnsFilterHostExists && <p className="mt-2 text-muted-foreground">The host doesn&apos;t resolve.</p>}
+            </ResultRow>
+          )}
           <ResultRow label="Block reason">
             {result.blockReason ? (
               <span className="break-words">

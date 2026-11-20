@@ -939,7 +939,7 @@ export interface ConnectedApp {
   lastUsed: string | null
 }
 
-export type BlockReason = "SAFE_BROWSING" | "BLOCKLIST" | "DOMAIN_RULE" | "ADMIN" | "USER_BLOCKED" | "SCAM_SIGNALS" | "CAMPAIGN" | "SIGN_IN_FORM"
+export type BlockReason = "SAFE_BROWSING" | "BLOCKLIST" | "DOMAIN_RULE" | "ADMIN" | "USER_BLOCKED" | "SCAM_SIGNALS" | "DNS_FILTERS" | "CAMPAIGN" | "SIGN_IN_FORM"
 
 export type SourceKind = "DOMAINS" | "LINKS" | "TOP_SITES" | "SHORTENERS" | "ENDINGS" | "BRAND_SITES"
 
@@ -1226,6 +1226,14 @@ export interface ReviewBulkResolveResult {
 
 export type UrlCheckOutcome = "ALLOWED" | "BLOCK" | "FLAG" | "CLEAN"
 
+export type DnsFilterStatus = "BLOCKED" | "NOT_BLOCKED" | "NO_ANSWER"
+
+export interface DnsFilterAnswer {
+  filter: string
+  status: DnsFilterStatus
+  answer: string
+}
+
 export interface UrlCheckResult {
   outcome: UrlCheckOutcome
   reasons: string[]
@@ -1233,6 +1241,8 @@ export interface UrlCheckResult {
   blockDetail: string | null
   host: string | null
   registrableDomain: string | null
+  dnsFilters: DnsFilterAnswer[]
+  dnsFilterHostExists: boolean
 }
 
 export type ReportCategory = "PHISHING" | "MALWARE" | "SPAM" | "IMPERSONATION" | "OTHER"

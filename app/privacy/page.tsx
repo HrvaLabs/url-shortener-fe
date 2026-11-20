@@ -374,6 +374,11 @@ export default function PrivacyPage() {
                   under <em>Who else receives data</em>.
                 </li>
                 <li>
+                  <strong>Security DNS filters</strong> — the destination&apos;s host name is looked up with
+                  Quad9, Cloudflare, CleanBrowsing and Control D, whose filters block known harmful domains.
+                  Only the host name is sent.
+                </li>
+                <li>
                   <strong>Redirects</strong> — the hrva.cc server may request a destination to follow
                   its redirects and check where they lead. The destination&apos;s server sees a request
                   from hrva.cc, never from the visitor, and no visitor data is sent.
@@ -472,6 +477,12 @@ export default function PrivacyPage() {
                   the address itself isn&apos;t sent. If an admin chooses to send a link to VirusTotal to be
                   scanned, VirusTotal receives its destination address and shows it to its paying users. No
                   visitor data is sent. See VirusTotal&apos;s <a href="https://docs.virustotal.com/docs/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="https://docs.virustotal.com/docs/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Notice</a>.
+                </li>
+                <li>
+                  <strong>Security DNS filters</strong> — the host name of a destination is looked up with
+                  <a href="https://quad9.net/privacy/policy/" target="_blank" rel="noopener noreferrer">Quad9</a>, <a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" target="_blank" rel="noopener noreferrer">Cloudflare</a>, <a href="https://cleanbrowsing.org/privacy" target="_blank" rel="noopener noreferrer">CleanBrowsing</a> and <a href="https://controld.com/privacy" target="_blank" rel="noopener noreferrer">Control D</a>
+                  to see whether their filters block it. Only the host name is sent, and no visitor data. Each name links to
+                  that provider&apos;s privacy policy.
                 </li>
                 <li>
                   <strong>Domain registries and Spamhaus</strong> — receive only the domain name of a

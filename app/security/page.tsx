@@ -48,7 +48,7 @@ export default function SecurityPage() {
         <p>Before a short link sends someone on, hrva.cc checks where it goes.</p>
         <ul>
           <li>
-            Every destination is checked against Google Safe Browsing and public blocklists when the link is made, and
+            Every destination is checked against Google Safe Browsing and public blocklists and security DNS filters when the link is made, and
             again while the link is active. A link to a known harmful site is refused, or stops working.
           </li>
           <li>Every click is checked against blocklists too, so a destination listed later stops working on the next click.</li>
