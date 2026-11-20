@@ -1320,6 +1320,7 @@ export type SettingKey =
   | "SIGN_IN_FORM_NEW_ACCOUNT_DAYS"
   | "BRAND_SITES_TOP_SITES"
   | "OPENAI_APPS_CHALLENGE"
+  | "MCP_MODERN"
 
 export type SettingGroup = "ACCESS" | "LINKS" | "SAFETY" | "ALERTS" | "DIGEST" | "EMAILS" | "ABUSE_REPORTS" | "APP_DIRECTORIES"
 
