@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             <div className="mt-8 rounded-xl border bg-muted/40 p-5">
               <p className="leading-7 text-foreground">
                 In short: we collect only what the service needs to work. No ads, no tracking
-                cookies, no analytics scripts. Link statistics are daily counts and never store
+                cookies, no analytics scripts in the app. Link statistics are daily counts and never store
                 visitors&apos; IP addresses. Visits to hrva.cc&apos;s own pages are counted by where
                 the visitor came from, with no IP address and nothing stored on the device.
               </p>
@@ -153,6 +153,22 @@ export default function PrivacyPage() {
                 to hrva.cc. Each point holds only the source, the kind of source, the page and the time, with nothing that identifies a visitor, and the admin sees only totals.
               </p>
 
+              <h3 id="web-analytics">Cloudflare Web Analytics</h3>
+              <p>
+                Separately from the counter above, Cloudflare Web Analytics is turned on for hrva.cc.
+                Cloudflare, which carries our traffic, adds its script (from static.cloudflareinsights.com)
+                to some pages served at hrva.cc itself rather than by the app at app.hrva.cc, such as the
+                API reference. The app blocks the script. Where it runs, it sends
+                Cloudflare the page&apos;s address, the address of the page you came from, and performance
+                figures such as how long the page took to load; as with any request, Cloudflare also sees
+                your IP address. The script sets no cookies and stores nothing in your browser, and hrva.cc
+                stores nothing from it. hrva.cc uses it to count visits to those pages. See Cloudflare&apos;s{" "}
+                <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+              </p>
+              <p>
+                Legal basis: legitimate interest (Art. 6(1)(f) GDPR) — counting visits to those pages.
+              </p>
+
               <h3>Bio pages</h3>
               <p>
                 If you create a bio page, we store what you enter for it: your handle, display name,
@@ -235,7 +251,8 @@ export default function PrivacyPage() {
                 These are strictly necessary to provide the service you requested, which is why no
                 consent banner is required for them (Art. 5(3) of the ePrivacy Directive, implemented
                 in Croatia by the Electronic Communications Act). We set no tracking cookies and use
-                no analytics or advertising scripts. Fonts are self-hosted — your browser does not
+                no advertising scripts, and the app loads no analytics scripts; for the pages outside it, see{" "}
+                <a href="#web-analytics">Cloudflare Web Analytics</a>. Fonts are self-hosted — your browser does not
                 contact third-party font services.
               </p>
 
@@ -509,6 +526,8 @@ export default function PrivacyPage() {
                   <a href="#visit-counts">Visits to hrva.cc&apos;s own pages</a>) are stored in Cloudflare
                   Workers Analytics Engine. Cloudflare&apos;s own terms apply there: its Privacy Policy, linked above, and
                   its <a href="https://www.cloudflare.com/terms/" target="_blank" rel="noopener noreferrer">Self-Serve Subscription Agreement</a>.
+                  Cloudflare Web Analytics runs on some pages served at hrva.cc itself, outside the app; see{" "}
+                  <a href="#web-analytics">Cloudflare Web Analytics</a>.
                 </li>
                 <li>
                   <strong>Discord</strong> — so the admin sees moderation events quickly, hrva.cc
