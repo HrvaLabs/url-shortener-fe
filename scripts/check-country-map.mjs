@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { createRequire } from "node:module"
 import "./resolve-ts-imports.mjs"
 
-const { alpha2ToNumeric, clicksText, colourStep, mapCountries, mapEntries, mapLabel, share } = await import("../lib/country-map.ts")
+const { alpha2ToNumeric, clicksText, colourStep, keyTarget, mapCountries, mapEntries, mapLabel, share, tabStop } = await import("../lib/country-map.ts")
 const { getAlpha2Codes, numericToAlpha2 } = await import("i18n-iso-countries/index.js")
 
 const world = createRequire(import.meta.url)("world-atlas/countries-110m.json")
@@ -167,6 +167,40 @@ check("mapLabel names the top three countries and their clicks", () => {
 
 check("mapLabel without a known country", () => {
   assert.equal(mapLabel([]), "World map of clicks by country. No clicks from a known country in this range.")
+})
+
+check("keyTarget: arrows step through the countries in clicks order and stop at the ends", () => {
+  assert.equal(keyTarget("ArrowRight", 0, 3), 1)
+  assert.equal(keyTarget("ArrowDown", 1, 3), 2)
+  assert.equal(keyTarget("ArrowRight", 2, 3), 2)
+  assert.equal(keyTarget("ArrowLeft", 2, 3), 1)
+  assert.equal(keyTarget("ArrowUp", 1, 3), 0)
+  assert.equal(keyTarget("ArrowLeft", 0, 3), 0)
+})
+
+check("keyTarget: Home and End jump to the most and the fewest clicks", () => {
+  assert.equal(keyTarget("Home", 2, 3), 0)
+  assert.equal(keyTarget("End", 0, 3), 2)
+  assert.equal(keyTarget("End", 0, 1), 0)
+})
+
+check("keyTarget: other keys and an empty map move nothing", () => {
+  for (const key of ["Tab", "Enter", " ", "Escape", "a", "PageDown"]) assert.equal(keyTarget(key, 1, 3), null, key)
+  assert.equal(keyTarget("ArrowRight", 0, 0), null)
+  assert.equal(keyTarget("Home", 0, 0), null)
+})
+
+check("keyTarget: from a position not in the list, the arrows start at an end", () => {
+  assert.equal(keyTarget("ArrowRight", -1, 3), 0)
+  assert.equal(keyTarget("ArrowLeft", -1, 3), 0)
+})
+
+check("tabStop: the country with the most clicks, or the last focused one while it is still on the map", () => {
+  assert.equal(tabStop(["191", "276", "840"], null), "191")
+  assert.equal(tabStop(["191", "276", "840"], "276"), "276")
+  assert.equal(tabStop(["191", "840"], "276"), "191")
+  assert.equal(tabStop([], "276"), undefined)
+  assert.equal(tabStop([], null), undefined)
 })
 
 if (failures > 0) process.exit(1)

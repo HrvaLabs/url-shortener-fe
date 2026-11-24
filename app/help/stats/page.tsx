@@ -79,9 +79,11 @@ export default function StatsHelpPage() {
               </p>
               <p>
                 Above the <strong>Countries</strong> list, a world map shows every country with clicks in the range, not
-                only the 10 in the list, in a stronger blue the more clicks it has. Point at, tap or tab to a country to
-                see its clicks and its share of all clicks. Very small countries and territories aren&apos;t drawn on the
-                map, but their clicks still count in the list.
+                only the 10 in the list, in a stronger blue the more clicks it has. Point at or tap a country to see its
+                clicks and its share of all clicks. With a keyboard, Tab goes to the country with the most clicks, the
+                arrow keys move to the next or previous country, Home and End to the first and last, and Escape hides
+                the details. Very small countries and territories aren&apos;t drawn on the map, but their clicks still
+                count in the list.
               </p>
               <p>
                 One link&apos;s analytics page has the same lists and map for that link alone.

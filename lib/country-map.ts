@@ -61,6 +61,30 @@ export function mapCountries(entries: BreakdownEntry[], shapeIds: ReadonlySet<st
   return new Map([...shown].map(([id, entry]) => [id, { code: entry.value, clicks: entry.clicks, step: colourStep(entry.clicks, max) }]))
 }
 
+/** The roving tab stop, the map's one place in the Tab order: the last focused country while it is still on the map, else the one with the most clicks. */
+export function tabStop(order: string[], lastFocused: string | null): string | undefined {
+  return lastFocused != null && order.includes(lastFocused) ? lastFocused : order[0]
+}
+
+/** Where a key moves the focus in clicks order: the arrows step one country (stopping at the ends), Home and End jump to the first and last. Null for any other key. */
+export function keyTarget(key: string, position: number, count: number): number | null {
+  if (count <= 0) return null
+  switch (key) {
+    case "ArrowRight":
+    case "ArrowDown":
+      return Math.min(Math.max(position + 1, 0), count - 1)
+    case "ArrowLeft":
+    case "ArrowUp":
+      return Math.max(position - 1, 0)
+    case "Home":
+      return 0
+    case "End":
+      return count - 1
+    default:
+      return null
+  }
+}
+
 /** The map figure's `aria-label`: the three countries with the most clicks. */
 export function mapLabel(entries: BreakdownEntry[]): string {
   const top = entries.slice(0, TOP_COUNTRIES_IN_LABEL)

@@ -1,12 +1,12 @@
 "use client"
 
 import { geoEqualEarth, geoPath, type GeoPath } from "d3-geo"
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react"
+import { memo, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react"
 import { feature } from "topojson-client"
 import type { GeometryCollection, Topology } from "topojson-specification"
 import countries110m from "world-atlas/countries-110m.json"
 import { breakdownLabel, countryFlag } from "@/lib/analytics"
-import { clicksText, mapCountries, mapEntries, mapLabel, share, type MapCountry } from "@/lib/country-map"
+import { clicksText, keyTarget, mapCountries, mapEntries, mapLabel, share, tabStop, type MapCountry } from "@/lib/country-map"
 import type { AnalyticsBreakdowns } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -72,33 +72,53 @@ const clamp = (value: number, min: number, max: number): number => Math.max(min,
 
 const countryText = (country: MapCountry, total: number): string => `${clicksText(country.clicks)} (${share(country.clicks, total)})`
 
+const PlainShapes = memo(function PlainShapes({ countries }: { countries: Map<string, MapCountry> }) {
+  return SHAPES.map((shape, index) =>
+    shape.id && countries.has(shape.id) ? null : (
+      <path key={index} d={shape.d} className={STEP_FILLS[0]} vectorEffect="non-scaling-stroke" />
+    ),
+  )
+})
+
+interface CountryPathProps {
+  index: number
+  country: MapCountry
+  total: number
+  tabStop: boolean
+  hintId: string
+}
+
+const CountryPath = memo(function CountryPath({ index, country, total, tabStop, hintId }: CountryPathProps) {
+  return (
+    <path
+      d={SHAPES[index].d}
+      data-index={index}
+      tabIndex={tabStop ? 0 : -1}
+      role="img"
+      aria-label={`${breakdownLabel("countries", country.code)}: ${countryText(country, total)}`}
+      aria-describedby={hintId}
+      className={cn("cursor-pointer outline-none", STEP_FILLS[country.step])}
+      vectorEffect="non-scaling-stroke"
+    />
+  )
+})
+
 interface CountryShapesProps {
   countries: Map<string, MapCountry>
   total: number
+  stopId: string | undefined
+  hintId: string
 }
 
-const CountryShapes = memo(function CountryShapes({ countries, total }: CountryShapesProps) {
-  const plain = SHAPES.flatMap((shape, index) => (shape.id && countries.has(shape.id) ? [] : [index]))
+const CountryShapes = memo(function CountryShapes({ countries, total, stopId, hintId }: CountryShapesProps) {
   return (
     <g className="stroke-card" strokeWidth={0.5}>
-      {plain.map((index) => (
-        <path key={index} d={SHAPES[index].d} className={STEP_FILLS[0]} vectorEffect="non-scaling-stroke" />
-      ))}
-      {[...countries].flatMap(([id, country]) => {
+      <PlainShapes countries={countries} />
+      {[...countries].map(([id, country]) => {
         const index = SHAPE_INDEX.get(id)
-        if (index == null) return []
-        return [
-          <path
-            key={index}
-            d={SHAPES[index].d}
-            data-index={index}
-            tabIndex={0}
-            role="img"
-            aria-label={`${breakdownLabel("countries", country.code)}: ${countryText(country, total)}`}
-            className={cn("cursor-pointer outline-none", STEP_FILLS[country.step])}
-            vectorEffect="non-scaling-stroke"
-          />,
-        ]
+        return index == null ? null : (
+          <CountryPath key={index} index={index} country={country} total={total} tabStop={id === stopId} hintId={hintId} />
+        )
       })}
     </g>
   )
@@ -114,6 +134,10 @@ export function CountryMap({ breakdowns }: CountryMapProps) {
   const total = useMemo(() => breakdowns.countries.reduce((sum, entry) => sum + entry.clicks, 0), [breakdowns.countries])
   const [tip, setTip] = useState<Tip | null>(null)
   const [focused, setFocused] = useState<number | null>(null)
+  const [lastFocused, setLastFocused] = useState<string | null>(null)
+  const order = useMemo(() => [...countries.keys()], [countries])
+  const stopId = tabStop(order, lastFocused)
+  const hintId = useId()
   const frameRef = useRef<HTMLDivElement>(null)
   const tipRef = useRef<HTMLDivElement>(null)
 
@@ -162,11 +186,16 @@ export function CountryMap({ breakdowns }: CountryMapProps) {
     setTip(index == null ? null : { index, pointer: null })
   }
 
-  const onFocus = (event: FocusEvent<SVGSVGElement>) => {
-    const index = shapeIndexOf(event.target)
-    if (index == null || !(event.target as Element).matches(":focus-visible")) return
+  const showFocused = (index: number) => {
     setFocused(index)
     setTip({ index, pointer: null })
+  }
+
+  const onFocus = (event: FocusEvent<SVGSVGElement>) => {
+    const index = shapeIndexOf(event.target)
+    if (index == null) return
+    setLastFocused(SHAPES[index].id)
+    if ((event.target as Element).matches(":focus-visible")) showFocused(index)
   }
 
   const onBlur = () => {
@@ -179,11 +208,23 @@ export function CountryMap({ breakdowns }: CountryMapProps) {
       setTip(null)
       return
     }
-    if (event.key !== "Enter" && event.key !== " ") return
     const index = shapeIndexOf(event.target)
     if (index == null) return
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault()
+      setTip({ index, pointer: null })
+      return
+    }
+    const target = keyTarget(event.key, order.indexOf(SHAPES[index].id ?? ""), order.length)
+    if (target == null) return
+    const nextId = order[target]
+    const nextIndex = SHAPE_INDEX.get(nextId)
+    if (nextIndex == null) return
     event.preventDefault()
-    setTip({ index, pointer: null })
+    const next = event.currentTarget.querySelector(`[data-index="${nextIndex}"]`)
+    if (next instanceof SVGElement) next.focus()
+    setLastFocused(nextId)
+    showFocused(nextIndex)
   }
 
   const outlined = [...new Set([tipCountry ? tip?.index : undefined, focused])].filter((index) => index != null)
@@ -201,7 +242,7 @@ export function CountryMap({ breakdowns }: CountryMapProps) {
           onBlur={onBlur}
           onKeyDown={onKeyDown}
         >
-          <CountryShapes countries={countries} total={total} />
+          <CountryShapes countries={countries} total={total} stopId={stopId} hintId={hintId} />
           {outlined.map((index) => (
             <path
               key={index}
@@ -226,6 +267,11 @@ export function CountryMap({ breakdowns }: CountryMapProps) {
           </div>
         )}
       </div>
+      {order.length > 0 && (
+        <p id={hintId} className="sr-only">
+          Arrow keys move between countries, from the most clicks to the fewest. Escape hides the details.
+        </p>
+      )}
       <div aria-hidden="true" className="mt-3 flex h-4 items-center justify-end gap-1.5 text-xs text-muted-foreground">
         <span>Fewer</span>
         {LEGEND_SWATCHES.map((swatch) => (
