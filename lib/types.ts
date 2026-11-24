@@ -11,7 +11,7 @@ export interface User {
   password?: string
   apiKeySlots: number
   links?: number
-  clicks?: number
+  visits?: number
   authorities: Authorities[]
   createDate: string
   lastLogin: string
