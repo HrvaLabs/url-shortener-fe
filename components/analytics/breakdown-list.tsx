@@ -4,13 +4,11 @@ import { cn } from "@/lib/utils"
 
 const WIDE_FROM = {
   lg: {
-    section: "lg:col-span-2",
     body: "lg:grid lg:grid-cols-5",
     header: "lg:col-span-3 lg:flex lg:flex-col lg:justify-center lg:border-b-0 lg:border-r",
     list: "lg:col-span-2",
   },
   "@3xl": {
-    section: "@3xl:col-span-2",
     body: "@3xl:grid @3xl:grid-cols-5",
     header: "@3xl:col-span-3 @3xl:flex @3xl:flex-col @3xl:justify-center @3xl:border-b-0 @3xl:border-r",
     list: "@3xl:col-span-2",
@@ -23,7 +21,7 @@ interface BreakdownListProps {
   entries: BreakdownEntry[]
   note?: React.ReactNode
   header?: React.ReactNode
-  /** From this breakpoint, while the header shows, the card spans both grid columns with the header left of the list (3/5 to 2/5). */
+  /** From this breakpoint, while the header shows, the header sits left of the list (3/5 to 2/5); give the card a full-width row. */
   wideFrom?: keyof typeof WIDE_FROM
 }
 
@@ -33,7 +31,7 @@ export function BreakdownList({ title, dimension, entries, note, header, wideFro
   const wide = headerShown && wideFrom ? WIDE_FROM[wideFrom] : undefined
 
   return (
-    <section className={cn("min-w-0 rounded-xl border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]", wide?.section)}>
+    <section className="min-w-0 rounded-xl border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
       <div className="flex items-baseline justify-between gap-4 border-b px-5 py-3.5">
         <h2 className="text-sm font-semibold">{title}</h2>
         <span className="text-xs text-muted-foreground">Clicks</span>

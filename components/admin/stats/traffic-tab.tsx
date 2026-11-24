@@ -90,14 +90,16 @@ function TrafficBody({ data, stamp, days }: TrafficBodyProps) {
             <ClicksChart daily={daily} days={days} uniqueVisitorsLabel={uniqueVisitorsLabel} showBots={showBots} bucketed />
           </div>
           <TopLinks links={topLinks} days={days} />
-          <div className="grid gap-4 @3xl:grid-cols-2">
-            <QrScansList totals={totals} sources={breakdowns.sources} />
-            <BreakdownList
-              title="Referrers"
-              dimension="referrers"
-              entries={breakdowns.referrers}
-              note="All links together. A link records its top 50 referrers a day; any others are counted under Other."
-            />
+          <div className="space-y-4">
+            <div className="grid gap-4 @3xl:grid-cols-2">
+              <QrScansList totals={totals} sources={breakdowns.sources} />
+              <BreakdownList
+                title="Referrers"
+                dimension="referrers"
+                entries={breakdowns.referrers}
+                note="All links together. A link records its top 50 referrers a day; any others are counted under Other."
+              />
+            </div>
             <BreakdownList
               title="Countries"
               dimension="countries"
@@ -105,9 +107,11 @@ function TrafficBody({ data, stamp, days }: TrafficBodyProps) {
               header={<CountryMapLazy breakdowns={breakdowns} />}
               wideFrom="@3xl"
             />
-            <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
-            <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
-            <BreakdownList title="Operating systems" dimension="operatingSystems" entries={breakdowns.operatingSystems} />
+            <div className="grid gap-4 @3xl:grid-cols-3">
+              <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
+              <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
+              <BreakdownList title="Operating systems" dimension="operatingSystems" entries={breakdowns.operatingSystems} />
+            </div>
           </div>
         </>
       )}

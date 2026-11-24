@@ -11,14 +11,16 @@ interface BreakdownPanelsProps {
 
 export function BreakdownPanels({ totals, breakdowns, passwordProtected }: BreakdownPanelsProps) {
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <QrScansList totals={totals} sources={breakdowns.sources} passwordProtected={passwordProtected} />
-      <BreakdownList
-        title="Referrers"
-        dimension="referrers"
-        entries={breakdowns.referrers}
-        note={passwordProtected ? "Referrers aren't available for password-protected links." : undefined}
-      />
+    <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <QrScansList totals={totals} sources={breakdowns.sources} passwordProtected={passwordProtected} />
+        <BreakdownList
+          title="Referrers"
+          dimension="referrers"
+          entries={breakdowns.referrers}
+          note={passwordProtected ? "Referrers aren't available for password-protected links." : undefined}
+        />
+      </div>
       <BreakdownList
         title="Countries"
         dimension="countries"
@@ -26,9 +28,11 @@ export function BreakdownPanels({ totals, breakdowns, passwordProtected }: Break
         header={<CountryMapLazy breakdowns={breakdowns} />}
         wideFrom="lg"
       />
-      <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
-      <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
-      <BreakdownList title="Operating systems" dimension="operatingSystems" entries={breakdowns.operatingSystems} />
+      <div className="grid gap-4 lg:grid-cols-3">
+        <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
+        <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
+        <BreakdownList title="Operating systems" dimension="operatingSystems" entries={breakdowns.operatingSystems} />
+      </div>
     </div>
   )
 }
