@@ -2,12 +2,14 @@ import assert from "node:assert/strict"
 import { createRequire } from "node:module"
 import "./resolve-ts-imports.mjs"
 
-const { alpha2ToNumeric, clicksText, colourStep, keyTarget, mapCountries, mapEntries, mapLabel, share, tabStop } = await import("../lib/country-map.ts")
+const { alpha2ToNumeric, clicksText, colourStep, keyTarget, mapCountries, mapEntries, mapLabel, shapeId, share, tabStop } = await import("../lib/country-map.ts")
 const { getAlpha2Codes, numericToAlpha2 } = await import("i18n-iso-countries/index.js")
 
 const world = createRequire(import.meta.url)("world-atlas/countries-110m.json")
 const ANTARCTICA = "010"
-const shapeIds = new Set(world.objects.countries.geometries.map((shape) => shape.id).filter((id) => id != null && id !== ANTARCTICA))
+const shapeIds = new Set(
+  world.objects.countries.geometries.map((shape) => shapeId(shape.id, shape.properties?.name)).filter((id) => id != null && id !== ANTARCTICA),
+)
 
 let failures = 0
 
@@ -62,8 +64,19 @@ check("alpha2ToNumeric gives nothing for values that aren't country codes", () =
 check("every shape on the map has a country code", () => {
   assert.ok(shapeIds.size > 150, `only ${shapeIds.size} shapes`)
   for (const id of shapeIds) assert.ok(numericToAlpha2(id), `shape ${id} has no alpha-2 code`)
-  for (const code of ["HR", "DE", "US", "FR", "RU", "CN", "BR", "AU", "IN", "ZA"]) assert.ok(shapeIds.has(alpha2ToNumeric(code)), code)
-  assert.equal(shapeIds.has(alpha2ToNumeric("XK")), false)
+  for (const code of ["HR", "DE", "US", "FR", "RU", "CN", "BR", "AU", "IN", "ZA", "XK"]) assert.ok(shapeIds.has(alpha2ToNumeric(code)), code)
+  assert.equal(shapeIds.has(alpha2ToNumeric("SG")), false)
+})
+
+check("shapeId: the shape's own id, and XK's code for the Kosovo shape that has none", () => {
+  assert.equal(shapeId("191", "Croatia"), "191")
+  assert.equal(shapeId(191, "Croatia"), "191")
+  assert.equal(shapeId(undefined, "Kosovo"), alpha2ToNumeric("XK"))
+  assert.equal(shapeId(null, "Kosovo"), "983")
+  assert.equal(shapeId(undefined, "Somaliland"), null)
+  assert.equal(shapeId(undefined, "N. Cyprus"), null)
+  assert.equal(shapeId(undefined, undefined), null)
+  assert.equal(world.objects.countries.geometries.filter((shape) => shapeId(shape.id, shape.properties?.name) === "983").length, 1)
 })
 
 check("colourStep: no clicks is 0", () => {
@@ -132,15 +145,22 @@ check("clicksText", () => {
 })
 
 check("mapCountries colours only countries with a shape, by their own max", () => {
-  const countries = mapCountries([entry("XK", 50), entry("HR", 10), entry("MT", 8), entry("DE", 3)], shapeIds)
+  const countries = mapCountries([entry("SG", 50), entry("HR", 10), entry("MT", 8), entry("DE", 3)], shapeIds)
   assert.deepEqual([...countries.keys()], ["191", "276"])
   assert.deepEqual(countries.get("191"), { code: "HR", clicks: 10, step: 5 })
   assert.deepEqual(countries.get("276"), { code: "DE", clicks: 3, step: 3 })
 })
 
 check("mapCountries: clicks only from codes without a shape colour nothing", () => {
-  assert.equal(mapCountries([entry("XK", 5), entry("MT", 2), entry("SG", 1)], shapeIds).size, 0)
+  assert.equal(mapCountries([entry("HK", 5), entry("MT", 2), entry("SG", 1)], shapeIds).size, 0)
   assert.equal(mapCountries([], shapeIds).size, 0)
+})
+
+check("mapCountries colours Kosovo", () => {
+  assert.deepEqual([...mapCountries([entry("XK", 5), entry("HR", 1)], shapeIds)], [
+    ["983", { code: "XK", clicks: 5, step: 5 }],
+    ["191", { code: "HR", clicks: 1, step: 1 }],
+  ])
 })
 
 check("mapCountries: one country with all the clicks gets the strongest colour", () => {

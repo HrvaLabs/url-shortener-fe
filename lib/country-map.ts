@@ -31,6 +31,12 @@ export function alpha2ToNumeric(code: string): string | undefined {
   return ALPHA_2.test(upper) ? isoNumericCode(upper) : undefined
 }
 
+/** A world-atlas shape's id: its ISO numeric code. The 110m Kosovo shape has no id, so it takes XK's code; the other shapes without one (N. Cyprus, Somaliland) have no ISO code. */
+export function shapeId(id: string | number | null | undefined, name: string | null | undefined): string | null {
+  if (id != null) return String(id)
+  return name === "Kosovo" ? (alpha2ToNumeric("XK") ?? null) : null
+}
+
 /** 0 for no clicks; otherwise 1 to 5 on a log scale from one click to `max`, and 5 for `max` itself. */
 export function colourStep(clicks: number, max: number): number {
   if (!(clicks >= 1)) return 0

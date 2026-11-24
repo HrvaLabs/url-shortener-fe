@@ -6,7 +6,7 @@ import { feature } from "topojson-client"
 import type { GeometryCollection, Topology } from "topojson-specification"
 import countries110m from "world-atlas/countries-110m.json"
 import { breakdownLabel, countryFlag } from "@/lib/analytics"
-import { clicksText, keyTarget, mapCountries, mapEntries, mapLabel, share, tabStop, type MapCountry } from "@/lib/country-map"
+import { clicksText, keyTarget, mapCountries, mapEntries, mapLabel, shapeId, share, tabStop, type MapCountry } from "@/lib/country-map"
 import type { AnalyticsBreakdowns } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -50,7 +50,7 @@ function anchorOf(country: CountryShape, path: GeoPath): Point {
 }
 
 function worldShapes(): Shape[] {
-  const world = countries110m as unknown as Topology<{ countries: GeometryCollection }>
+  const world = countries110m as unknown as Topology<{ countries: GeometryCollection<{ name?: string }> }>
   const land = feature(world, world.objects.countries).features.filter((country) => String(country.id) !== ANTARCTICA)
   const projection = geoEqualEarth().fitExtent(
     [
@@ -61,7 +61,7 @@ function worldShapes(): Shape[] {
   )
   const path = geoPath(projection).digits(1)
   return land.map((country) => ({
-    id: country.id == null ? null : String(country.id),
+    id: shapeId(country.id, country.properties?.name),
     d: path(country) ?? "",
     anchor: anchorOf(country, path),
   }))
