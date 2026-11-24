@@ -6,9 +6,10 @@ interface BreakdownListProps {
   dimension: BreakdownDimension
   entries: BreakdownEntry[]
   note?: React.ReactNode
+  header?: React.ReactNode
 }
 
-export function BreakdownList({ title, dimension, entries, note }: BreakdownListProps) {
+export function BreakdownList({ title, dimension, entries, note, header }: BreakdownListProps) {
   const largest = Math.max(1, ...entries.map((entry) => entry.clicks))
 
   return (
@@ -18,6 +19,7 @@ export function BreakdownList({ title, dimension, entries, note }: BreakdownList
         <span className="text-xs text-muted-foreground">Clicks</span>
       </div>
       {note && <p className="border-b px-5 py-2.5 text-xs text-muted-foreground">{note}</p>}
+      {header && entries.length > 0 && <div className="border-b px-5 py-4">{header}</div>}
       {entries.length === 0 ? (
         <p className="px-5 py-8 text-center text-sm text-muted-foreground">No clicks in this range.</p>
       ) : (

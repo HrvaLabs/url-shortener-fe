@@ -78,7 +78,13 @@ export default function StatsHelpPage() {
                 clicks and add the rest together as <strong>Other</strong>.
               </p>
               <p>
-                One link&apos;s analytics page has the same lists for that link alone.
+                Above the <strong>Countries</strong> list, a world map shows every country with clicks in the range, not
+                only the 10 in the list, in a stronger blue the more clicks it has. Point at, tap or tab to a country to
+                see its clicks and its share of all clicks. Very small countries and territories aren&apos;t drawn on the
+                map, but their clicks still count in the list.
+              </p>
+              <p>
+                One link&apos;s analytics page has the same lists and map for that link alone.
               </p>
               <p>
                 <strong>URLs</strong> and <strong>Analytics</strong> update by themselves every 10 seconds while

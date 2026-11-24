@@ -4,6 +4,7 @@ import { useState } from "react"
 import { AnalyticsEmpty } from "@/components/analytics/analytics-states"
 import { BreakdownList } from "@/components/analytics/breakdown-list"
 import { ClicksChart } from "@/components/analytics/clicks-chart"
+import { CountryMapLazy } from "@/components/analytics/country-map-lazy"
 import { QrScansList } from "@/components/analytics/qr-scans-list"
 import { StatTotals } from "@/components/analytics/stat-totals"
 import { LinkIdentityCells, LinkIdentityHeads } from "@/components/admin/stats/link-identity-cells"
@@ -97,7 +98,12 @@ function TrafficBody({ data, stamp, days }: TrafficBodyProps) {
               entries={breakdowns.referrers}
               note="All links together. A link records its top 50 referrers a day; any others are counted under Other."
             />
-            <BreakdownList title="Countries" dimension="countries" entries={breakdowns.countries} />
+            <BreakdownList
+              title="Countries"
+              dimension="countries"
+              entries={breakdowns.countries}
+              header={<CountryMapLazy breakdowns={breakdowns} />}
+            />
             <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
             <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
             <BreakdownList title="Operating systems" dimension="operatingSystems" entries={breakdowns.operatingSystems} />

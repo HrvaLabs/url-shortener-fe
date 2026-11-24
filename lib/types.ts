@@ -203,9 +203,11 @@ export interface AnalyticsBreakdowns {
   browsers: BreakdownEntry[]
   operatingSystems: BreakdownEntry[]
   sources: BreakdownEntry[]
+  /** Every named country over the range (v2.41), no top-10 cap. An older backend leaves it out. */
+  countryMap?: BreakdownEntry[]
 }
 
-export type BreakdownDimension = keyof AnalyticsBreakdowns
+export type BreakdownDimension = Exclude<keyof AnalyticsBreakdowns, "countryMap">
 
 export interface AnalyticsLinkSummary {
   id: number

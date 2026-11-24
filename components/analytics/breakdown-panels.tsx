@@ -1,4 +1,5 @@
 import { BreakdownList } from "@/components/analytics/breakdown-list"
+import { CountryMapLazy } from "@/components/analytics/country-map-lazy"
 import { QrScansList } from "@/components/analytics/qr-scans-list"
 import type { AnalyticsBreakdowns, AnalyticsTotals } from "@/lib/types"
 
@@ -18,7 +19,12 @@ export function BreakdownPanels({ totals, breakdowns, passwordProtected }: Break
         entries={breakdowns.referrers}
         note={passwordProtected ? "Referrers aren't available for password-protected links." : undefined}
       />
-      <BreakdownList title="Countries" dimension="countries" entries={breakdowns.countries} />
+      <BreakdownList
+        title="Countries"
+        dimension="countries"
+        entries={breakdowns.countries}
+        header={<CountryMapLazy breakdowns={breakdowns} />}
+      />
       <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
       <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
       <BreakdownList title="Operating systems" dimension="operatingSystems" entries={breakdowns.operatingSystems} />

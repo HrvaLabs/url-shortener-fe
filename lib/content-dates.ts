@@ -1,11 +1,11 @@
 export const CONTENT_UPDATED = {
-  "/": "2026-11-09",
+  "/": "2026-11-24",
   "/help": "2026-11-09",
   "/help/links": "2026-11-09",
   "/help/links-without-an-account": "2026-11-03",
   "/help/utm": "2026-11-02",
   "/help/passkeys": "2026-11-01",
-  "/help/stats": "2026-11-02",
+  "/help/stats": "2026-11-24",
   "/help/link-in-bio": "2026-11-01",
   "/help/notifications": "2026-11-02",
   "/help/install-app": "2026-10-29",
