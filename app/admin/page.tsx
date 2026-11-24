@@ -30,7 +30,7 @@ import { DomainLimitDialog } from "@/components/admin/domain-limit-dialog"
 import { DestinationChangesDialog } from "@/components/admin/destination-changes-dialog"
 import { standingText } from "@/lib/link-edit"
 
-const sortFields = ["createDate", "email", "lastLogin", "active"]
+const sortFields = ["createDate", "email", "lastLogin", "active", "links", "clicks"]
 
 const sortOptions: SortOption[] = [
   { field: "createDate", direction: "desc", label: "Newest first" },
@@ -39,11 +39,19 @@ const sortOptions: SortOption[] = [
   { field: "email", direction: "desc", label: "Email, Z to A" },
   { field: "lastLogin", direction: "desc", label: "Last login, latest first" },
   { field: "lastLogin", direction: "asc", label: "Last login, earliest first" },
+  { field: "links", direction: "desc", label: "Most links first" },
+  { field: "links", direction: "asc", label: "Fewest links first" },
+  { field: "clicks", direction: "desc", label: "Most clicks first" },
+  { field: "clicks", direction: "asc", label: "Fewest clicks first" },
   { field: "active", direction: "desc", label: "Active first" },
   { field: "active", direction: "asc", label: "Inactive first" },
 ]
 
 const providerLabel = (provider: string | undefined) => providerLabels[(provider ?? "local") as SignInProvider] ?? provider
+
+const countText = (count: number | undefined) => (count === undefined ? "—" : count.toLocaleString())
+
+const countLabel = (count: number | undefined, word: string) => (count === undefined ? `— ${word}s` : plural(count, word))
 
 const lastLoginText = (lastLogin: string | null | undefined) => (lastLogin ? formatDateTime(parseServerDateTime(lastLogin)) : "Never")
 
@@ -295,7 +303,8 @@ function AdminUsers() {
                 <TableHead className="hidden @min-[61.5rem]:table-cell">ID</TableHead>
                 <SortHead field="email" label="Email" sortDir={sortDir} toggleSort={toggleSort} />
                 <TableHead className="hidden @min-[47rem]:table-cell">Sign-in methods</TableHead>
-                <TableHead className="hidden @min-[61.5rem]:table-cell">Slots</TableHead>
+                <SortHead field="links" label="Links" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[61.5rem]:table-cell" />
+                <SortHead field="clicks" label="Clicks" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[61.5rem]:table-cell" />
                 <SortHead field="createDate" label="Created" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[47rem]:table-cell" />
                 <SortHead field="lastLogin" label="Last login" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[61.5rem]:table-cell" />
                 <SortHead field="active" label="Status" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[47rem]:table-cell" />
@@ -319,7 +328,7 @@ function AdminUsers() {
                         <SignInMethodBadges user={user} />
                         <ActiveBadge active={user.active} />
                       </div>
-                      <p>ID {user.id} · {plural(user.apiKeySlots ?? 0, "API key slot")}</p>
+                      <p>ID {user.id} · {countLabel(user.links, "link")} · {countLabel(user.clicks, "click")}</p>
                       <p className="@min-[47rem]:hidden">Created {user.createDate ? formatDateTime(parseServerDateTime(user.createDate)) : "—"}</p>
                       <p>Last login {lastLoginText(user.lastLogin)}</p>
                     </div>
@@ -327,7 +336,8 @@ function AdminUsers() {
                   <TableCell className="hidden @min-[47rem]:table-cell">
                     <SignInMethodBadges user={user} />
                   </TableCell>
-                  <TableCell className="hidden tabular-nums @min-[61.5rem]:table-cell">{user.apiKeySlots}</TableCell>
+                  <TableCell className="hidden tabular-nums @min-[61.5rem]:table-cell">{countText(user.links)}</TableCell>
+                  <TableCell className="hidden tabular-nums @min-[61.5rem]:table-cell">{countText(user.clicks)}</TableCell>
                   <TableCell className="hidden tabular-nums text-muted-foreground @min-[47rem]:table-cell">
                     {user.createDate ? <DateTimeLines value={user.createDate} /> : "—"}
                   </TableCell>

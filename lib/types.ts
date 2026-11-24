@@ -10,6 +10,8 @@ export interface User {
   email: string
   password?: string
   apiKeySlots: number
+  links?: number
+  clicks?: number
   authorities: Authorities[]
   createDate: string
   lastLogin: string
