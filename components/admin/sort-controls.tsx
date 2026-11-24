@@ -16,13 +16,15 @@ interface SortHeadProps {
   field: string
   label: string
   sortDir(field: string): string | null
-  toggleSort(field: string): void
+  toggleSort(field: string, firstDirection?: SortDirection): void
+  /** The order of the first click on this column; ascending unless given (`"desc"` for counts, so the largest come first). */
+  firstDirection?: SortDirection
   className?: string
 }
 
 let refocusAfterReload: { field: string; path: string } | null = null
 
-export function SortHead({ field, label, sortDir, toggleSort, className }: SortHeadProps) {
+export function SortHead({ field, label, sortDir, toggleSort, firstDirection, className }: SortHeadProps) {
   const direction = sortDir(field)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -42,7 +44,7 @@ export function SortHead({ field, label, sortDir, toggleSort, className }: SortH
       <button
         ref={buttonRef}
         type="button"
-        onClick={() => toggleSort(field)}
+        onClick={() => toggleSort(field, firstDirection)}
         className="flex cursor-pointer select-none items-center gap-1 rounded-sm text-left ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         {label}

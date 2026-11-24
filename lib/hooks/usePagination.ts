@@ -14,6 +14,12 @@ const addressParam = (name: string) => (typeof window === "undefined" ? null : n
 
 const knownSort = (sort: string | null, sortFields: readonly string[] | undefined) => sort != null && (sortFields == null || sortFields.includes(sort))
 
+type SortOrder = "asc" | "desc"
+
+/** The order after a click on a sort header: a new field starts at `firstDirection` (ascending unless given), the current field flips. */
+export const nextSortOrder = (sort: string, order: SortOrder, field: string, firstDirection: SortOrder = "asc"): SortOrder =>
+  sort === field ? (order === "asc" ? "desc" : "asc") : firstDirection
+
 export const prefixedParam = (prefix: string, name: string) => (prefix ? `${prefix}${name[0].toUpperCase()}${name.slice(1)}` : name)
 
 export function usePagination(defaultSort = "createDate", defaultOrder: "asc" | "desc" = "desc", sortFields?: readonly string[], prefix = "") {
@@ -57,10 +63,9 @@ export function usePagination(defaultSort = "createDate", defaultOrder: "asc" | 
   }, [])
 
   const toggleSort = useCallback(
-    (field: string) => {
-      const newOrder = sort === field && order === "asc" ? "desc" : "asc"
+    (field: string, firstDirection: SortOrder = "asc") => {
       setSortState(field)
-      setOrderState(newOrder)
+      setOrderState(nextSortOrder(sort, order, field, firstDirection))
       setPageState(0)
     },
     [sort, order],

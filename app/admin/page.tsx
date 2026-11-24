@@ -303,8 +303,8 @@ function AdminUsers() {
                 <TableHead className="hidden @min-[61.5rem]:table-cell">ID</TableHead>
                 <SortHead field="email" label="Email" sortDir={sortDir} toggleSort={toggleSort} />
                 <TableHead className="hidden @min-[47rem]:table-cell">Sign-in methods</TableHead>
-                <SortHead field="links" label="Links" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[61.5rem]:table-cell" />
-                <SortHead field="visits" label="Visits" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[61.5rem]:table-cell" />
+                <SortHead field="links" label="Links" sortDir={sortDir} toggleSort={toggleSort} firstDirection="desc" className="hidden @min-[61.5rem]:table-cell" />
+                <SortHead field="visits" label="Visits" sortDir={sortDir} toggleSort={toggleSort} firstDirection="desc" className="hidden @min-[61.5rem]:table-cell" />
                 <SortHead field="createDate" label="Created" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[47rem]:table-cell" />
                 <SortHead field="lastLogin" label="Last login" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[61.5rem]:table-cell" />
                 <SortHead field="active" label="Status" sortDir={sortDir} toggleSort={toggleSort} className="hidden @min-[47rem]:table-cell" />
