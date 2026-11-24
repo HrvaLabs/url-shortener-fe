@@ -1,3 +1,7 @@
+"use client"
+
+import { useState } from "react"
+import { HideOnError } from "@/components/hide-on-error"
 import { breakdownLabel, countryFlag } from "@/lib/analytics"
 import type { BreakdownDimension, BreakdownEntry } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -27,7 +31,8 @@ interface BreakdownListProps {
 
 export function BreakdownList({ title, dimension, entries, note, header, wideFrom }: BreakdownListProps) {
   const largest = Math.max(1, ...entries.map((entry) => entry.clicks))
-  const headerShown = header != null && entries.length > 0
+  const [headerFailed, setHeaderFailed] = useState(false)
+  const headerShown = header != null && entries.length > 0 && !headerFailed
   const wide = headerShown && wideFrom ? WIDE_FROM[wideFrom] : undefined
 
   return (
@@ -38,7 +43,11 @@ export function BreakdownList({ title, dimension, entries, note, header, wideFro
       </div>
       {note && <p className="border-b px-5 py-2.5 text-xs text-muted-foreground">{note}</p>}
       <div className={wide?.body}>
-        {headerShown && <div className={cn("min-w-0 border-b px-5 py-4", wide?.header)}>{header}</div>}
+        {headerShown && (
+          <div className={cn("min-w-0 border-b px-5 py-4", wide?.header)}>
+            <HideOnError onError={() => setHeaderFailed(true)}>{header}</HideOnError>
+          </div>
+        )}
         {entries.length === 0 ? (
           <p className="px-5 py-8 text-center text-sm text-muted-foreground">No clicks in this range.</p>
         ) : (
