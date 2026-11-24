@@ -17,7 +17,7 @@ const ANTARCTICA = "010"
 const TOOLTIP_GAP = 12
 
 const STEP_FILLS = [
-  "fill-muted",
+  "fill-border dark:fill-muted",
   "fill-brand/20 dark:fill-brand/40",
   "fill-brand/35 dark:fill-brand/55",
   "fill-brand/50 dark:fill-brand/70",
@@ -109,7 +109,7 @@ const CountryPath = memo(function CountryPath({ index, country, total, tabStop, 
       tabIndex={tabStop ? 0 : -1}
       role="img"
       aria-label={`${breakdownLabel("countries", country.code)}: ${countryText(country, total)}`}
-      aria-describedby={hintId}
+      aria-describedby={tabStop ? hintId : undefined}
       className={cn("cursor-pointer outline-none", STEP_FILLS[country.step])}
       vectorEffect="non-scaling-stroke"
     />
