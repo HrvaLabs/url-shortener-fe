@@ -169,30 +169,41 @@ check("mapLabel without a known country", () => {
   assert.equal(mapLabel([]), "World map of clicks by country. No clicks from a known country in this range.")
 })
 
+const press = (key, modifiers = {}) => ({ key, altKey: false, ctrlKey: false, metaKey: false, shiftKey: false, ...modifiers })
+
 check("keyTarget: arrows step through the countries in clicks order and stop at the ends", () => {
-  assert.equal(keyTarget("ArrowRight", 0, 3), 1)
-  assert.equal(keyTarget("ArrowDown", 1, 3), 2)
-  assert.equal(keyTarget("ArrowRight", 2, 3), 2)
-  assert.equal(keyTarget("ArrowLeft", 2, 3), 1)
-  assert.equal(keyTarget("ArrowUp", 1, 3), 0)
-  assert.equal(keyTarget("ArrowLeft", 0, 3), 0)
+  assert.equal(keyTarget(press("ArrowRight"), 0, 3), 1)
+  assert.equal(keyTarget(press("ArrowDown"), 1, 3), 2)
+  assert.equal(keyTarget(press("ArrowRight"), 2, 3), 2)
+  assert.equal(keyTarget(press("ArrowLeft"), 2, 3), 1)
+  assert.equal(keyTarget(press("ArrowUp"), 1, 3), 0)
+  assert.equal(keyTarget(press("ArrowLeft"), 0, 3), 0)
 })
 
 check("keyTarget: Home and End jump to the most and the fewest clicks", () => {
-  assert.equal(keyTarget("Home", 2, 3), 0)
-  assert.equal(keyTarget("End", 0, 3), 2)
-  assert.equal(keyTarget("End", 0, 1), 0)
+  assert.equal(keyTarget(press("Home"), 2, 3), 0)
+  assert.equal(keyTarget(press("End"), 0, 3), 2)
+  assert.equal(keyTarget(press("End"), 0, 1), 0)
 })
 
 check("keyTarget: other keys and an empty map move nothing", () => {
-  for (const key of ["Tab", "Enter", " ", "Escape", "a", "PageDown"]) assert.equal(keyTarget(key, 1, 3), null, key)
-  assert.equal(keyTarget("ArrowRight", 0, 0), null)
-  assert.equal(keyTarget("Home", 0, 0), null)
+  for (const key of ["Tab", "Enter", " ", "Escape", "a", "PageDown"]) assert.equal(keyTarget(press(key), 1, 3), null, key)
+  assert.equal(keyTarget(press("ArrowRight"), 0, 0), null)
+  assert.equal(keyTarget(press("Home"), 0, 0), null)
 })
 
 check("keyTarget: from a position not in the list, the arrows start at an end", () => {
-  assert.equal(keyTarget("ArrowRight", -1, 3), 0)
-  assert.equal(keyTarget("ArrowLeft", -1, 3), 0)
+  assert.equal(keyTarget(press("ArrowRight"), -1, 3), 0)
+  assert.equal(keyTarget(press("ArrowLeft"), -1, 3), 0)
+})
+
+check("keyTarget: Alt, Ctrl or Meta with a key is left to the browser (Alt+Left is Back)", () => {
+  for (const key of ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"]) {
+    assert.equal(keyTarget(press(key, { altKey: true }), 1, 3), null, `Alt+${key}`)
+    assert.equal(keyTarget(press(key, { ctrlKey: true }), 1, 3), null, `Ctrl+${key}`)
+    assert.equal(keyTarget(press(key, { metaKey: true }), 1, 3), null, `Meta+${key}`)
+  }
+  assert.equal(keyTarget(press("ArrowRight", { shiftKey: true }), 1, 3), 2)
 })
 
 check("tabStop: the country with the most clicks, or the last focused one while it is still on the map", () => {

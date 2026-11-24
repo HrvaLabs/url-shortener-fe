@@ -16,8 +16,21 @@ const MAP_HEIGHT = 422
 const ANTARCTICA = "010"
 const TOOLTIP_GAP = 12
 
-const STEP_FILLS = ["fill-muted", "fill-brand/20", "fill-brand/35", "fill-brand/50", "fill-brand/70", "fill-brand"]
-const LEGEND_SWATCHES = ["bg-brand/20", "bg-brand/35", "bg-brand/50", "bg-brand/70", "bg-brand"]
+const STEP_FILLS = [
+  "fill-muted",
+  "fill-brand/20 dark:fill-brand/40",
+  "fill-brand/35 dark:fill-brand/55",
+  "fill-brand/50 dark:fill-brand/70",
+  "fill-brand/70 dark:fill-brand/85",
+  "fill-brand",
+]
+const LEGEND_SWATCHES = [
+  "bg-brand/20 dark:bg-brand/40",
+  "bg-brand/35 dark:bg-brand/55",
+  "bg-brand/50 dark:bg-brand/70",
+  "bg-brand/70 dark:bg-brand/85",
+  "bg-brand",
+]
 
 type Point = [number, number]
 
@@ -215,7 +228,7 @@ export function CountryMap({ breakdowns }: CountryMapProps) {
       setTip({ index, pointer: null })
       return
     }
-    const target = keyTarget(event.key, order.indexOf(SHAPES[index].id ?? ""), order.length)
+    const target = keyTarget(event, order.indexOf(SHAPES[index].id ?? ""), order.length)
     if (target == null) return
     const nextId = order[target]
     const nextIndex = SHAPE_INDEX.get(nextId)

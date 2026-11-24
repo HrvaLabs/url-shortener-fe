@@ -66,9 +66,16 @@ export function tabStop(order: string[], lastFocused: string | null): string | u
   return lastFocused != null && order.includes(lastFocused) ? lastFocused : order[0]
 }
 
-/** Where a key moves the focus in clicks order: the arrows step one country (stopping at the ends), Home and End jump to the first and last. Null for any other key. */
-export function keyTarget(key: string, position: number, count: number): number | null {
-  if (count <= 0) return null
+export interface MapKeyPress {
+  key: string
+  altKey: boolean
+  ctrlKey: boolean
+  metaKey: boolean
+}
+
+/** Where a key moves the focus in clicks order: the arrows step one country (stopping at the ends), Home and End jump to the first and last. Null for any other key, and with Alt, Ctrl or Meta held, so browser shortcuts such as Alt+Left (Back) still work. */
+export function keyTarget({ key, altKey, ctrlKey, metaKey }: MapKeyPress, position: number, count: number): number | null {
+  if (count <= 0 || altKey || ctrlKey || metaKey) return null
   switch (key) {
     case "ArrowRight":
     case "ArrowDown":

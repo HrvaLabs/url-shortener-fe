@@ -24,6 +24,7 @@ export function BreakdownPanels({ totals, breakdowns, passwordProtected }: Break
         dimension="countries"
         entries={breakdowns.countries}
         header={<CountryMapLazy breakdowns={breakdowns} />}
+        wideFrom="lg"
       />
       <BreakdownList title="Devices" dimension="devices" entries={breakdowns.devices} />
       <BreakdownList title="Browsers" dimension="browsers" entries={breakdowns.browsers} />
